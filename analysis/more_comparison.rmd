@@ -1,0 +1,302 @@
+---
+title: "Comparing Models Using the Lynx dataset"
+author: "Ziang Zhang"
+date: "2024-11-20"
+output: workflowr::wflow_html
+editor_options:
+  chunk_output_type: console
+---
+
+```{r package, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(BayesGP)
+library(forecast)
+```
+
+### Introduction
+
+Here we compare the forecasting performance of the sGP model with the several other models using the Lynx dataset. 
+
+For each model, we will fit the model to the first 80 years of the data and then forecast the next 54 years. The performance will be examined using the mean squared error (RMSE) and the mean absolute error (MAE).
+
+```{r}
+data <- data.frame(year = seq(1821, 1934, by = 1), logy = log(as.numeric(lynx)), y = as.numeric(lynx))
+data$x <- data$year - min(data$year)
+x <- data$x
+y <- data$y
+data_reduced <- data[1:80,]
+test_data <- data[-c(1:80),]
+### Region of prediction
+region_lynx <- c(1821,1960)
+```
+
+
+### Fitting the sGP
+
+```{r}
+### Define a prior on 50-years predictive SD:
+pred_SD <- list(u = 0.5, alpha = 0.01)
+
+results_sGP <- BayesGP::model_fit(
+  formula = y ~ f(x = year, model = "sgp", k = 100,
+                  period = 10,
+                  sd.prior = list(param = pred_SD, h = 50), 
+                  initial_location = "left", region = region_lynx) +
+    f(x = x, model = "IID", sd.prior = list(param = list(u = 1, alpha = 0.5))),
+  data = data_reduced,
+  family = "poisson")
+```
+
+Once the model is fitted, we can obtain the posterior summary as well as the posterior samples.
+
+```{r}
+pred_g1 <- predict(results_sGP, newdata = data.frame(x = x, year = data$year), variable = "year", include.intercept = T)
+pred_g1_samps <- predict(results_sGP, newdata = data.frame(x = x, year = data$year), variable = "year", include.intercept = T, only.samples = T)
+```
+
+Let's take a look at the forecasted values.
+
+```{r}
+par(mfrow = c(1,2))
+plot(logy~year, data = data, type = 'p', xlab = "year", ylab = "lynx (log)", xlim = c(1820,1940), lwd = 0.5, cex = 1, ylim = c(0,15))
+lines(mean~year, data = pred_g1, col = 'blue', xlab = "year", ylab = "lynx (log)", xlim = c(1820,1940))
+lines(q0.975~year, data = pred_g1, col = 'red', lty = "dashed")
+lines(q0.025~year, data = pred_g1, col = 'red', lty = "dashed")
+abline(v = 1900, col = "purple", lty = "dashed")
+
+plot(y~year, log='y' ,data = data, type = 'p', xlab = "year", ylab = "lynx", xlim = c(1820,1940), lwd = 0.5, cex = 1, ylim = c(5,50000) ) #ylim = c(0,15))
+matlines(y = exp(pred_g1_samps[,2:102]), x = data$year, col = "#FF000010", lty = 1)
+Nshow = 4
+matlines(y = exp(pred_g1_samps[,seq(1,Nshow)]), x = data$year, 
+         col = paste0(RColorBrewer::brewer.pal(Nshow,'Dark2'),"99"),
+         lty = 1)
+par(mfrow = c(1,1))
+```
+
+
+Take a look at the inferential accuracy for the testing data, using the posterior median:
+
+```{r}
+# MSE
+mean((test_data$logy -pred_g1$q0.5[-c(1:80)])^2)
+# RMSE
+sqrt(mean((test_data$logy -pred_g1$q0.5[-c(1:80)])^2))
+# MAE
+mean(abs(test_data$logy -pred_g1$q0.5[-c(1:80)]))
+```
+
+
+### Fitting an ARIMA model
+
+As a comparison, we fit an ARIMA(2,1,0) model to the (log) transformed data.
+
+```{r}
+arima_model <- arima(data_reduced$logy, order = c(2,1,0))
+
+forecasted <- forecast(arima_model, h = nrow(test_data))
+predicted_logy <- forecasted$mean
+predicted_y <- exp(predicted_logy)
+
+# Combine fitted values and forecasted means
+fitted_values <- fitted(arima_model)
+
+# Combine data for plotting
+data_combined <- rbind(
+  data.frame(year = data_reduced$year, logy = data_reduced$logy, source = "Training"),
+  data.frame(year = test_data$year, logy = test_data$logy, source = "Test"),
+  data.frame(year = test_data$year, logy = predicted_logy, source = "Prediction")
+)
+fitted_and_forecasted <- c(fitted_values, as.numeric(forecasted$mean))
+combined_years <- c(data_reduced$year, test_data$year)
+
+# Combine upper and lower intervals for the full range
+combined_upper <- c(rep(NA, length(fitted_values)), forecasted$upper[, 2])
+combined_lower <- c(rep(NA, length(fitted_values)), forecasted$lower[, 2])
+
+# Plot the observed data
+
+plot(logy ~ year, data = data_combined[data_combined$source == "Training", ], 
+     type = "p", xlab = "Year", ylab = "Lynx (log)", 
+     xlim = c(1820, 1940), ylim = c(0, 15), 
+     col = "black",
+     main = "ARIMA(2,1,0) Model")
+
+# Add the combined fitted and forecasted mean line
+lines(combined_years, fitted_and_forecasted, col = "blue", lwd = 1.5)
+
+# Add the combined 95% prediction intervals
+lines(combined_years, combined_upper, col = "red", lty = "dashed")
+lines(combined_years, combined_lower, col = "red", lty = "dashed")
+
+# Add test data points
+points(logy ~ year, data = data_combined[data_combined$source == "Test", ], 
+       col = "black")
+abline(v = 1900, col = "purple", lty = "dashed")
+```
+
+The testing performances:
+
+```{r}
+# MSE
+mean((test_data$logy - predicted_logy)^2)
+# RMSE
+sqrt(mean((test_data$logy - predicted_logy)^2))
+# MAE
+mean(abs(test_data$logy - predicted_logy))
+```
+
+Alternatively, we could also try an ARIMA model estimated from `auto.arima` function.
+
+```{r}
+arima_model <- auto.arima(data_reduced$logy)
+
+forecasted <- forecast(arima_model, h = nrow(test_data))
+predicted_logy <- forecasted$mean
+predicted_y <- exp(predicted_logy)
+
+# Combine fitted values and forecasted means
+fitted_and_forecasted <- c(fitted_values, as.numeric(forecasted$mean))
+combined_years <- c(data_reduced$year, test_data$year)
+
+# Combine upper and lower intervals for the full range
+combined_upper <- c(rep(NA, length(fitted_values)), forecasted$upper[, 2])
+combined_lower <- c(rep(NA, length(fitted_values)), forecasted$lower[, 2])
+
+# Plot the observed data
+plot(logy ~ year, data = data_combined[data_combined$source == "Training", ], 
+     type = "p", xlab = "Year", ylab = "Lynx (log)", 
+     xlim = c(1820, 1940), ylim = c(0, 15), 
+     col = "black",
+     main = "ARIMA(4,0,1) Model from `auto.arima`")
+
+# Add the combined fitted and forecasted mean line
+lines(combined_years, fitted_and_forecasted, col = "blue", lwd = 1.5)
+
+# Add the combined 95% prediction intervals
+lines(combined_years, combined_upper, col = "red", lty = "dashed")
+lines(combined_years, combined_lower, col = "red", lty = "dashed")
+
+# Add test data points
+points(logy ~ year, data = data_combined[data_combined$source == "Test", ], 
+       col = "black")
+abline(v = 1900, col = "purple", lty = "dashed")
+```
+
+Its testing performances:
+
+```{r}
+# MSE
+mean((test_data$logy - predicted_logy)^2)
+# RMSE
+sqrt(mean((test_data$logy - predicted_logy)^2))
+# MAE
+mean(abs(test_data$logy - predicted_logy))
+```
+
+
+### Fitting an AR2 using INLA
+
+The above ARIMA implementation is based on the maximum likelihood estimation. 
+Here we use the INLA package to fit a comparable Bayesian model with an AR(2) prior.
+
+```{r warning=FALSE, message=FALSE}
+require(INLA)
+
+# Combine data
+test_data_masked <- test_data; test_data_masked$y <- NA
+data_combined <- rbind(data_reduced, test_data_masked[,colnames(data_reduced)])
+data_combined$idx <- 1:nrow(data_combined)  # Create an index for time points
+
+
+# Fit the model with INLA
+formula <- y ~ 1 + f(x, model = "ar", order = 2) + f(idx, model = "iid", hyper = list(prec = list(prior = "pc.prec", param = c(1, 0.5))))
+fit <- inla(
+  formula,
+  family = "poisson",
+  data = data_combined,
+  control.predictor = list(compute = TRUE),
+  control.compute = list(config = TRUE)
+)
+
+# Extract fitted values and posterior summaries
+fitted_values <- fit$summary.linear.predictor; year <- data_combined$year
+predicted_means <- fitted_values$mean 
+predicted_lower <- fitted_values$`0.025quant` 
+predicted_upper <- fitted_values$`0.975quant` 
+
+data_combined <- rbind(data_reduced, test_data[,colnames(data_reduced)])
+# Plot results
+plot(logy ~ year, data = data_combined, 
+     type = "p", xlab = "Year", ylab = "Lynx (log)", 
+     xlim = c(1820, 1940), ylim = c(0, 15), 
+     col = "black",
+     main = "INLA with AR2 prior")
+lines(year, predicted_means, col = "blue", lwd = 1.5)
+lines(year, predicted_lower, col = "red", lty = "dashed")
+lines(year, predicted_upper, col = "red", lty = "dashed")
+points(logy ~ year, data = test_data, 
+       col = "black")
+abline(v = 1900, col = "purple", lty = "dashed")
+```
+
+The testing performances:
+
+```{r}
+# MSE
+mean((test_data$logy - predicted_means[-c(1:80)])^2)
+# RMSE
+sqrt(mean((test_data$logy - predicted_means[-c(1:80)])^2))
+# MAE
+mean(abs(test_data$logy - predicted_means[-c(1:80)]))
+```
+
+
+
+### Fitting a Bayesian ARIMA
+
+We can also use the `stan_sarima` to fit a Bayesian ARIMA model through MCMC:
+
+```{r warning=FALSE, message=FALSE, results='hide'}
+require(bayesforecast)
+lynx_training <- log(lynx[1:80])
+lynx_test <- log(lynx[-c(1:80)])
+bayes_arima = stan_sarima(ts = lynx_training, order = c(2,1,0))
+```
+
+Visualization of the fit:
+
+```{r}
+forecasted <- forecast(bayes_arima, h = length(lynx_test))
+fitted_and_forecasted <- c(fitted(bayes_arima), as.numeric(forecasted$mean))
+fitted_and_forecasted_upper <- c(fitted(bayes_arima), forecasted$upper[, 2])
+fitted_and_forecasted_lower <- c(fitted(bayes_arima), forecasted$lower[, 2])
+# Plot the observed data
+plot(logy ~ year, data = data_combined,
+     type = "p", xlab = "Year", ylab = "Lynx (log)", 
+     xlim = c(1820, 1940), ylim = c(0, 15), 
+     col = "black",
+     main = "Bayesian ARIMA Model")
+lines(year, fitted_and_forecasted, col = "blue", lwd = 1.5)
+lines(year, fitted_and_forecasted_upper, col = "red", lty = "dashed")
+lines(year, fitted_and_forecasted_lower, col = "red", lty = "dashed")
+abline(v = 1900, col = "purple", lty = "dashed")
+```
+
+
+The testing performances:
+
+```{r}
+# MSE
+mean((lynx_test - forecasted$mean)^2)
+# RMSE
+sqrt(mean((lynx_test - forecasted$mean)^2))
+# MAE
+mean(abs(lynx_test - forecasted$mean))
+```
+
+
+
+
+
+
+
