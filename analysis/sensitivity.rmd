@@ -1,0 +1,134 @@
+---
+title: "Anlysis of Prior Sensitivity for sGP Models"
+author: "Ziang Zhang"
+date: "2024-11-21"
+output: workflowr::wflow_html
+editor_options:
+  chunk_output_type: console
+---
+
+```{r}
+library(tidyverse)
+library(BayesGP)
+```
+
+
+## Introduction
+
+One important factor that affects the inference of the sGP model is the choice of the prior on its SD parameter $\sigma$.
+The suggested way to construct prior on $\sigma$ is through an Exponential prior on its $h$-step predictive SD $\sigma(h)$, with the form of
+$$
+\text{P}[\sigma(h)>u] = q,
+$$
+where $u$ is the threshold and $q$ is the exceedance probability.
+
+In this tutorial, we will examine the sensitivity of the sGP model to the choice of the prior on $\sigma$ by fitting the model to the Lynx dataset with different priors on $\sigma$.
+
+```{r}
+data <- data.frame(year = seq(1821, 1934, by = 1), logy = log(as.numeric(lynx)), y = as.numeric(lynx))
+data$x <- data$year - min(data$year)
+x <- data$x
+y <- data$y
+data_reduced <- data[1:80,]
+test_data <- data[-c(1:80),]
+### Region of prediction
+region_lynx <- c(1821,1960)
+```
+
+
+### Trying different priors
+
+First, we write a function that takes in the threshold $u$ and the exceedance probability $q$ and fits the sGP model with the corresponding prior on $\sigma(50)$, and then returns the posterior summary of the fitted model.
+
+```{r}
+fit_once <- function(u, alpha){
+  pred_SD <- list(u = u, alpha = alpha)
+  results_sGP <- BayesGP::model_fit(
+    formula = y ~ f(x = year, model = "sgp", k = 100,
+                    period = 10,
+                    sd.prior = list(param = pred_SD, h = 50), 
+                    initial_location = "left", region = region_lynx) +
+      f(x = x, model = "IID", sd.prior = list(param = list(u = 1, alpha = 0.5))),
+    data = data_reduced,
+    family = "poisson")
+  pred_g1 <- predict(results_sGP, newdata = data.frame(x = x, year = data$year), variable = "year", include.intercept = T, quantiles = c(0.1,0.9))
+  return(pred_g1)
+}
+```
+
+First, we fixed the exceedance probability at $0.01$ and tried different values of $u$.
+
+```{r}
+alpha = 0.01
+u_vec = seq(0.1, 1, by = 0.1)
+pred_summary <- lapply(u_vec, fit_once, alpha = alpha)
+pred_means <- do.call(rbind, lapply(pred_summary, function(x) x$mean))
+```
+
+Let's plot the posterior mean 
+
+```{r}
+# Create a color palette from light to dark
+color_palette <- colorRampPalette(c("lightblue", "blue"))
+
+# Generate colors for the number of `u_vec`
+colors <- color_palette(length(u_vec))
+
+plot(data$year, data$logy, type = "p", col = "black", lwd = 2, xlab = "Year", ylab = "Lynx count", cex = 0.1)
+matlines(data$year, t(pred_means), col = colors, lty = 1)
+legend("topleft", legend = paste("u =", u_vec), col = colors, lty = 1, cex = 1)
+```
+
+
+We could also plot the MSE of the posterior mean for different values of $u$.
+
+```{r}
+MSEs <- apply(pred_means, 1, function(x) mean((x - data$logy)^2))
+plot(u_vec, MSEs, type = "l", col = "blue", lwd = 2, xlab = "u", ylab = "MSE")
+```
+
+Overall, unless the value of $u$ is too small, the MSE is not sensitive to the choice of $u$.
+
+
+We could similar check how the coverage of the 95% credible interval changes with different values of $u$.
+
+```{r}
+coverage <- lapply(pred_summary, function(x) mean(data$logy > x$q0.1 & data$logy < x$q0.9))
+plot(u_vec, coverage, type = "l", col = "blue", lwd = 2, xlab = "u", ylab = "Coverage", ylim = c(0,1))
+abline(h = 0.8, col = "red", lty = "dashed")
+```
+
+Next, we replicate the same analysis for other exceedance probabilities:
+
+```{r}
+alpha_vec = c(0.01, 0.05, 0.1, 0.5)
+u_vec = seq(0.1, 1, by = 0.1)
+pred_summary_list <- lapply(alpha_vec, function(alpha) lapply(u_vec, fit_once, alpha = alpha))
+```
+
+
+Put everything on the same plot for visualization:
+
+```{r}
+pred_means_list <- lapply(pred_summary_list, function(pred_summary) do.call(rbind, lapply(pred_summary, function(x) x$mean)))
+
+MSE_mat <- lapply(pred_means_list, function(pred_means) apply(pred_means, 1, function(x) mean((x - data$logy)^2)))
+
+# change list to matrix
+MSE_mat <- do.call(cbind, MSE_mat)
+matplot(u_vec, MSE_mat, type = "l", col = rainbow(length(alpha_vec)), lwd = 2, xlab = "u", ylab = "MSE")
+legend("topright", legend = paste("alpha =", alpha_vec), col = rainbow(length(alpha_vec)), lty = 1, cex = 1)
+```
+
+Now, let's check how the coverage probability changes with different values of $u$ and $\alpha$.
+
+```{r}
+coverage_mat <- lapply(pred_summary_list, function(pred_summary) lapply(pred_summary, function(x) mean(data$logy > x$q0.1 & data$logy < x$q0.9)))
+coverage_mat <- do.call(cbind, coverage_mat)
+matplot(u_vec, coverage_mat, type = "l", col = rainbow(length(alpha_vec)), lwd = 2, xlab = "u", ylab = "Coverage", ylim = c(0,1))
+legend("bottomright", legend = paste("alpha =", alpha_vec), col = rainbow(length(alpha_vec)), lty = 1, cex = 1)
+```
+
+
+
+
