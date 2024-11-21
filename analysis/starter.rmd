@@ -1,5 +1,5 @@
 ---
-title: "A Starter Tutorial: Fitting sGP to a Synthetic Dataset"
+title: "Getting Started: Fitting sGP to a Synthetic Dataset"
 author: "Ziang Zhang"
 date: "2024-11-20"
 output: workflowr::wflow_html
@@ -19,8 +19,8 @@ source("code/functions.R")
 
 In this tutorial, we introduce the basic steps to fit a sGP model using the seasonal B-spline approximation introduced in [Zhang et al, 2024](https://arxiv.org/abs/2305.09914).
 
-For the purpose of illustration, we will take one of the synthetic datasets described in the main paper.
-The dataset and its corresponding true function are shown below.
+For illustration, we use one of the synthetic datasets described in the main paper.
+The dataset and its corresponding true function are shown in the plots below.
 
 ```{r}
 n <- 500
@@ -63,12 +63,12 @@ g(x) &\sim \text{sGP}(\sigma_x), \\
 \end{aligned}
 \end{equation}
 
-We assume the sGP prior has a frequency of $2$ ($\alpha = 4\pi$), and we consider the following Exponential prior on the one-step PSD $\sigma_x(1)$ defined as:
+We assume the sGP prior has a frequency of $2$ ($\alpha = 4\pi$), and use an Exponential prior for the one-step PSD $\sigma_x(1)$ defined as:
 \[
 \text{P}(\sigma_x(1) > 2) = 0.1.
 \]
 
-For the individual level random intercept, we assume its standard deviation $\sigma_\xi$ has an Exponential prior with median at $1$.
+The standard deviation $\sigma_\xi$ of the observation-level random intercept follows an Exponential prior with a median of $1$.
 
 To make the computation more efficient, we will use $10$ equally spaced knots to define the B-spline basis, which will then be used to approximate the sGP prior.
 
