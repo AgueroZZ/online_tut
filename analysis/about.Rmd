@@ -7,4 +7,4 @@ editor_options:
   chunk_output_type: console
 ---
 
-Describe your project.
+This is the online tutorial companion to the paper "Efficient Modeling of Quasi Periodic Data with Seasonal Gaussian Process" by Ziang Zhang, Patrick Brown and Jamie Stafford. The paper is available on [arXiv](https://arxiv.org/abs/2305.09914).
