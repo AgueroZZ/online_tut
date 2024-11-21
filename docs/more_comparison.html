@@ -1,0 +1,1056 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Ziang Zhang" />
+
+<meta name="date" content="2024-11-20" />
+
+<title>Comparing Models Using the Lynx dataset</title>
+
+<script src="site_libs/header-attrs-2.28/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/main/img/reproducible.png">
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">sGP Tutorial</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Comparing Models Using the Lynx
+dataset</h1>
+<h4 class="author">Ziang Zhang</h4>
+<h4 class="date">2024-11-20</h4>
+
+</div>
+
+
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span>
+workflowr <span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
+</li>
+<li>
+<a data-toggle="tab" href="#checks"> Checks <span
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+</a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2024-11-21
+</p>
+<p>
+<strong>Checks:</strong> <span
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> 0
+</p>
+<p>
+<strong>Knit directory:</strong> <code>online_tut/</code> <span
+class="glyphicon glyphicon-question-sign" aria-hidden="true"
+title="This is the local directory in which the code in this file was executed.">
+</span>
+</p>
+<p>
+This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a>
+analysis was created with <a
+  href="https://github.com/workflowr/workflowr">workflowr</a> (version
+1.7.1). The <em>Checks</em> tab describes the reproducibility checks
+that were applied when the results were created. The <em>Past
+versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="checks" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date
+</a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguptodate"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great! Since the R Markdown file has been committed to the Git
+repository, you know the exact version of the code that produced these
+results.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the
+global environment can affect the analysis in your R Markdown file in
+unknown ways. For reproduciblity it’s best to always run the code in an
+empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20241120code">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Seed:</strong>
+<code>set.seed(20241120)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed20241120code"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(20241120)</code> was run prior to running
+the code in the R Markdown file. Setting a seed ensures that any results
+that rely on randomness, e.g. subsampling or permutations, are
+reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Session information:</strong>
+recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package
+versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be
+confident that you successfully produced the results during this
+run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+</p>
+</div>
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Using relative paths to the files within your workflowr
+project makes it easier to run your code on other machines.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrong2cbca39">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Repository version:</strong> 2cbca39
+</a>
+</p>
+</div>
+<div id="strongRepositoryversionstrong2cbca39"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Great! You are using Git for version control. Tracking code development
+and connecting the code version to the results is critical for
+reproducibility.
+</p>
+<p>
+The results in this page were generated with repository version 2cbca39.
+See the <em>Past versions</em> tab to see a history of the changes made
+to the R Markdown and HTML files.
+</p>
+<p>
+Note that you need to be careful to ensure that all relevant files for
+the analysis have been committed to Git prior to generating the results
+(you can use <code>wflow_publish</code> or
+<code>wflow_git_commit</code>). workflowr only checks the R Markdown
+file, but you know if there are other scripts or data files that it
+depends on. Below is the status of the Git repository when the results
+were generated:
+</p>
+<pre><code>
+Ignored files:
+    Ignored:    .DS_Store
+    Ignored:    .Rhistory
+    Ignored:    .Rproj.user/
+    Ignored:    analysis/.DS_Store
+    Ignored:    analysis/.Rhistory
+    Ignored:    code/.DS_Store
+
+Untracked files:
+    Untracked:  code/functions.R
+    Untracked:  code/tut.cpp
+    Untracked:  code/tut.o
+    Untracked:  code/tut.so
+
+Unstaged changes:
+    Modified:   analysis/_site.yml
+    Deleted:    analysis/license.Rmd
+
+</code></pre>
+<p>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not
+included in this status report because it is ok for generated content to
+have uncommitted changes.
+</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+<p>
+These are the previous versions of the repository in which changes were
+made to the R Markdown (<code>analysis/more_comparison.rmd</code>) and
+HTML (<code>docs/more_comparison.html</code>) files. If you’ve
+configured a remote Git repository (see <code>?wflow_git_remote</code>),
+click on the hyperlinks in the table below to view the files as they
+were in that past version.
+</p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+2cbca39
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2024-11-21
+</td>
+<td>
+workflowr::wflow_publish("analysis/more_comparison.rmd")
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<pre class="r"><code>library(tidyverse)
+library(BayesGP)
+library(forecast)</code></pre>
+<div id="introduction" class="section level3">
+<h3>Introduction</h3>
+<p>Here we compare the forecasting performance of the sGP model with the
+several other models using the Lynx dataset.</p>
+<p>For each model, we will fit the model to the first 80 years of the
+data and then forecast the next 54 years. The performance will be
+examined using the mean squared error (RMSE) and the mean absolute error
+(MAE).</p>
+<pre class="r"><code>data &lt;- data.frame(year = seq(1821, 1934, by = 1), logy = log(as.numeric(lynx)), y = as.numeric(lynx))
+data$x &lt;- data$year - min(data$year)
+x &lt;- data$x
+y &lt;- data$y
+data_reduced &lt;- data[1:80,]
+test_data &lt;- data[-c(1:80),]
+### Region of prediction
+region_lynx &lt;- c(1821,1960)</code></pre>
+</div>
+<div id="fitting-the-sgp" class="section level3">
+<h3>Fitting the sGP</h3>
+<pre class="r"><code>### Define a prior on 50-years predictive SD:
+pred_SD &lt;- list(u = 0.5, alpha = 0.01)
+
+results_sGP &lt;- BayesGP::model_fit(
+  formula = y ~ f(x = year, model = &quot;sgp&quot;, k = 100,
+                  period = 10,
+                  sd.prior = list(param = pred_SD, h = 50), 
+                  initial_location = &quot;left&quot;, region = region_lynx) +
+    f(x = x, model = &quot;IID&quot;, sd.prior = list(param = list(u = 1, alpha = 0.5))),
+  data = data_reduced,
+  family = &quot;poisson&quot;)</code></pre>
+<p>Once the model is fitted, we can obtain the posterior summary as well
+as the posterior samples.</p>
+<pre class="r"><code>pred_g1 &lt;- predict(results_sGP, newdata = data.frame(x = x, year = data$year), variable = &quot;year&quot;, include.intercept = T)
+pred_g1_samps &lt;- predict(results_sGP, newdata = data.frame(x = x, year = data$year), variable = &quot;year&quot;, include.intercept = T, only.samples = T)</code></pre>
+<p>Let’s take a look at the forecasted values.</p>
+<pre class="r"><code>par(mfrow = c(1,2))
+plot(logy~year, data = data, type = &#39;p&#39;, xlab = &quot;year&quot;, ylab = &quot;lynx (log)&quot;, xlim = c(1820,1940), lwd = 0.5, cex = 1, ylim = c(0,15))
+lines(mean~year, data = pred_g1, col = &#39;blue&#39;, xlab = &quot;year&quot;, ylab = &quot;lynx (log)&quot;, xlim = c(1820,1940))
+lines(q0.975~year, data = pred_g1, col = &#39;red&#39;, lty = &quot;dashed&quot;)
+lines(q0.025~year, data = pred_g1, col = &#39;red&#39;, lty = &quot;dashed&quot;)
+abline(v = 1900, col = &quot;purple&quot;, lty = &quot;dashed&quot;)
+
+plot(y~year, log=&#39;y&#39; ,data = data, type = &#39;p&#39;, xlab = &quot;year&quot;, ylab = &quot;lynx&quot;, xlim = c(1820,1940), lwd = 0.5, cex = 1, ylim = c(5,50000) ) #ylim = c(0,15))
+matlines(y = exp(pred_g1_samps[,2:102]), x = data$year, col = &quot;#FF000010&quot;, lty = 1)
+Nshow = 4
+matlines(y = exp(pred_g1_samps[,seq(1,Nshow)]), x = data$year, 
+         col = paste0(RColorBrewer::brewer.pal(Nshow,&#39;Dark2&#39;),&quot;99&quot;),
+         lty = 1)</code></pre>
+<p><img src="figure/more_comparison.rmd/unnamed-chunk-4-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>par(mfrow = c(1,1))</code></pre>
+<p>Take a look at the inferential accuracy for the testing data, using
+the posterior median:</p>
+<pre class="r"><code># MSE
+mean((test_data$logy -pred_g1$q0.5[-c(1:80)])^2)</code></pre>
+<pre><code>[1] 0.9244069</code></pre>
+<pre class="r"><code># RMSE
+sqrt(mean((test_data$logy -pred_g1$q0.5[-c(1:80)])^2))</code></pre>
+<pre><code>[1] 0.9614608</code></pre>
+<pre class="r"><code># MAE
+mean(abs(test_data$logy -pred_g1$q0.5[-c(1:80)]))</code></pre>
+<pre><code>[1] 0.7981702</code></pre>
+</div>
+<div id="fitting-an-arima-model" class="section level3">
+<h3>Fitting an ARIMA model</h3>
+<p>As a comparison, we fit an ARIMA(2,1,0) model to the (log)
+transformed data.</p>
+<pre class="r"><code>arima_model &lt;- arima(data_reduced$logy, order = c(2,1,0))
+
+forecasted &lt;- forecast(arima_model, h = nrow(test_data))
+predicted_logy &lt;- forecasted$mean
+predicted_y &lt;- exp(predicted_logy)
+
+# Combine fitted values and forecasted means
+fitted_values &lt;- fitted(arima_model)
+
+# Combine data for plotting
+data_combined &lt;- rbind(
+  data.frame(year = data_reduced$year, logy = data_reduced$logy, source = &quot;Training&quot;),
+  data.frame(year = test_data$year, logy = test_data$logy, source = &quot;Test&quot;),
+  data.frame(year = test_data$year, logy = predicted_logy, source = &quot;Prediction&quot;)
+)
+fitted_and_forecasted &lt;- c(fitted_values, as.numeric(forecasted$mean))
+combined_years &lt;- c(data_reduced$year, test_data$year)
+
+# Combine upper and lower intervals for the full range
+combined_upper &lt;- c(rep(NA, length(fitted_values)), forecasted$upper[, 2])
+combined_lower &lt;- c(rep(NA, length(fitted_values)), forecasted$lower[, 2])
+
+# Plot the observed data
+
+plot(logy ~ year, data = data_combined[data_combined$source == &quot;Training&quot;, ], 
+     type = &quot;p&quot;, xlab = &quot;Year&quot;, ylab = &quot;Lynx (log)&quot;, 
+     xlim = c(1820, 1940), ylim = c(0, 15), 
+     col = &quot;black&quot;,
+     main = &quot;ARIMA(2,1,0) Model&quot;)
+
+# Add the combined fitted and forecasted mean line
+lines(combined_years, fitted_and_forecasted, col = &quot;blue&quot;, lwd = 1.5)
+
+# Add the combined 95% prediction intervals
+lines(combined_years, combined_upper, col = &quot;red&quot;, lty = &quot;dashed&quot;)
+lines(combined_years, combined_lower, col = &quot;red&quot;, lty = &quot;dashed&quot;)
+
+# Add test data points
+points(logy ~ year, data = data_combined[data_combined$source == &quot;Test&quot;, ], 
+       col = &quot;black&quot;)
+abline(v = 1900, col = &quot;purple&quot;, lty = &quot;dashed&quot;)</code></pre>
+<p><img src="figure/more_comparison.rmd/unnamed-chunk-6-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>The testing performances:</p>
+<pre class="r"><code># MSE
+mean((test_data$logy - predicted_logy)^2)</code></pre>
+<pre><code>[1] 1.851862</code></pre>
+<pre class="r"><code># RMSE
+sqrt(mean((test_data$logy - predicted_logy)^2))</code></pre>
+<pre><code>[1] 1.360831</code></pre>
+<pre class="r"><code># MAE
+mean(abs(test_data$logy - predicted_logy))</code></pre>
+<pre><code>[1] 1.161994</code></pre>
+<p>Alternatively, we could also try an ARIMA model estimated from
+<code>auto.arima</code> function.</p>
+<pre class="r"><code>arima_model &lt;- auto.arima(data_reduced$logy)
+
+forecasted &lt;- forecast(arima_model, h = nrow(test_data))
+predicted_logy &lt;- forecasted$mean
+predicted_y &lt;- exp(predicted_logy)
+
+# Combine fitted values and forecasted means
+fitted_and_forecasted &lt;- c(fitted_values, as.numeric(forecasted$mean))
+combined_years &lt;- c(data_reduced$year, test_data$year)
+
+# Combine upper and lower intervals for the full range
+combined_upper &lt;- c(rep(NA, length(fitted_values)), forecasted$upper[, 2])
+combined_lower &lt;- c(rep(NA, length(fitted_values)), forecasted$lower[, 2])
+
+# Plot the observed data
+plot(logy ~ year, data = data_combined[data_combined$source == &quot;Training&quot;, ], 
+     type = &quot;p&quot;, xlab = &quot;Year&quot;, ylab = &quot;Lynx (log)&quot;, 
+     xlim = c(1820, 1940), ylim = c(0, 15), 
+     col = &quot;black&quot;,
+     main = &quot;ARIMA(4,0,1) Model from `auto.arima`&quot;)
+
+# Add the combined fitted and forecasted mean line
+lines(combined_years, fitted_and_forecasted, col = &quot;blue&quot;, lwd = 1.5)
+
+# Add the combined 95% prediction intervals
+lines(combined_years, combined_upper, col = &quot;red&quot;, lty = &quot;dashed&quot;)
+lines(combined_years, combined_lower, col = &quot;red&quot;, lty = &quot;dashed&quot;)
+
+# Add test data points
+points(logy ~ year, data = data_combined[data_combined$source == &quot;Test&quot;, ], 
+       col = &quot;black&quot;)
+abline(v = 1900, col = &quot;purple&quot;, lty = &quot;dashed&quot;)</code></pre>
+<p><img src="figure/more_comparison.rmd/unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Its testing performances:</p>
+<pre class="r"><code># MSE
+mean((test_data$logy - predicted_logy)^2)</code></pre>
+<pre><code>[1] 1.324397</code></pre>
+<pre class="r"><code># RMSE
+sqrt(mean((test_data$logy - predicted_logy)^2))</code></pre>
+<pre><code>[1] 1.150825</code></pre>
+<pre class="r"><code># MAE
+mean(abs(test_data$logy - predicted_logy))</code></pre>
+<pre><code>[1] 0.9579137</code></pre>
+</div>
+<div id="fitting-an-ar2-using-inla" class="section level3">
+<h3>Fitting an AR2 using INLA</h3>
+<p>The above ARIMA implementation is based on the maximum likelihood
+estimation. Here we use the INLA package to fit a comparable Bayesian
+model with an AR(2) prior.</p>
+<pre class="r"><code>require(INLA)
+
+# Combine data
+test_data_masked &lt;- test_data; test_data_masked$y &lt;- NA
+data_combined &lt;- rbind(data_reduced, test_data_masked[,colnames(data_reduced)])
+data_combined$idx &lt;- 1:nrow(data_combined)  # Create an index for time points
+
+
+# Fit the model with INLA
+formula &lt;- y ~ 1 + f(x, model = &quot;ar&quot;, order = 2) + f(idx, model = &quot;iid&quot;, hyper = list(prec = list(prior = &quot;pc.prec&quot;, param = c(1, 0.5))))
+fit &lt;- inla(
+  formula,
+  family = &quot;poisson&quot;,
+  data = data_combined,
+  control.predictor = list(compute = TRUE),
+  control.compute = list(config = TRUE)
+)
+
+# Extract fitted values and posterior summaries
+fitted_values &lt;- fit$summary.linear.predictor; year &lt;- data_combined$year
+predicted_means &lt;- fitted_values$mean 
+predicted_lower &lt;- fitted_values$`0.025quant` 
+predicted_upper &lt;- fitted_values$`0.975quant` 
+
+data_combined &lt;- rbind(data_reduced, test_data[,colnames(data_reduced)])
+# Plot results
+plot(logy ~ year, data = data_combined, 
+     type = &quot;p&quot;, xlab = &quot;Year&quot;, ylab = &quot;Lynx (log)&quot;, 
+     xlim = c(1820, 1940), ylim = c(0, 15), 
+     col = &quot;black&quot;,
+     main = &quot;INLA with AR2 prior&quot;)
+lines(year, predicted_means, col = &quot;blue&quot;, lwd = 1.5)
+lines(year, predicted_lower, col = &quot;red&quot;, lty = &quot;dashed&quot;)
+lines(year, predicted_upper, col = &quot;red&quot;, lty = &quot;dashed&quot;)
+points(logy ~ year, data = test_data, 
+       col = &quot;black&quot;)
+abline(v = 1900, col = &quot;purple&quot;, lty = &quot;dashed&quot;)</code></pre>
+<p><img src="figure/more_comparison.rmd/unnamed-chunk-10-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>The testing performances:</p>
+<pre class="r"><code># MSE
+mean((test_data$logy - predicted_means[-c(1:80)])^2)</code></pre>
+<pre><code>[1] 1.382034</code></pre>
+<pre class="r"><code># RMSE
+sqrt(mean((test_data$logy - predicted_means[-c(1:80)])^2))</code></pre>
+<pre><code>[1] 1.175599</code></pre>
+<pre class="r"><code># MAE
+mean(abs(test_data$logy - predicted_means[-c(1:80)]))</code></pre>
+<pre><code>[1] 0.9804374</code></pre>
+</div>
+<div id="fitting-a-bayesian-arima" class="section level3">
+<h3>Fitting a Bayesian ARIMA</h3>
+<p>We can also use the <code>stan_sarima</code> to fit a Bayesian ARIMA
+model through MCMC:</p>
+<pre class="r"><code>require(bayesforecast)
+lynx_training &lt;- log(lynx[1:80])
+lynx_test &lt;- log(lynx[-c(1:80)])
+bayes_arima = stan_sarima(ts = lynx_training, order = c(2,1,0))</code></pre>
+<p>Visualization of the fit:</p>
+<pre class="r"><code>forecasted &lt;- forecast(bayes_arima, h = length(lynx_test))
+fitted_and_forecasted &lt;- c(fitted(bayes_arima), as.numeric(forecasted$mean))
+fitted_and_forecasted_upper &lt;- c(fitted(bayes_arima), forecasted$upper[, 2])
+fitted_and_forecasted_lower &lt;- c(fitted(bayes_arima), forecasted$lower[, 2])
+# Plot the observed data
+plot(logy ~ year, data = data_combined,
+     type = &quot;p&quot;, xlab = &quot;Year&quot;, ylab = &quot;Lynx (log)&quot;, 
+     xlim = c(1820, 1940), ylim = c(0, 15), 
+     col = &quot;black&quot;,
+     main = &quot;Bayesian ARIMA Model&quot;)
+lines(year, fitted_and_forecasted, col = &quot;blue&quot;, lwd = 1.5)
+lines(year, fitted_and_forecasted_upper, col = &quot;red&quot;, lty = &quot;dashed&quot;)
+lines(year, fitted_and_forecasted_lower, col = &quot;red&quot;, lty = &quot;dashed&quot;)
+abline(v = 1900, col = &quot;purple&quot;, lty = &quot;dashed&quot;)</code></pre>
+<p><img src="figure/more_comparison.rmd/unnamed-chunk-13-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>The testing performances:</p>
+<pre class="r"><code># MSE
+mean((lynx_test - forecasted$mean)^2)</code></pre>
+<pre><code>[1] 1.796256</code></pre>
+<pre class="r"><code># RMSE
+sqrt(mean((lynx_test - forecasted$mean)^2))</code></pre>
+<pre><code>[1] 1.340245</code></pre>
+<pre class="r"><code># MAE
+mean(abs(lynx_test - forecasted$mean))</code></pre>
+<pre><code>[1] 1.144751</code></pre>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
+Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 4.3.1 (2023-06-16)
+Platform: aarch64-apple-darwin20 (64-bit)
+Running under: macOS Monterey 12.7.4
+
+Matrix products: default
+BLAS:   /Library/Frameworks/R.framework/Versions/4.3-arm64/Resources/lib/libRblas.0.dylib 
+LAPACK: /Library/Frameworks/R.framework/Versions/4.3-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.11.0
+
+locale:
+[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+
+time zone: America/Chicago
+tzcode source: internal
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+ [1] bayesforecast_1.0.1 INLA_23.09.09       sp_2.1-4           
+ [4] Matrix_1.6-4        forecast_8.23.0     BayesGP_0.1.3      
+ [7] lubridate_1.9.3     forcats_1.0.0       stringr_1.5.1      
+[10] dplyr_1.1.4         purrr_1.0.2         readr_2.1.5        
+[13] tidyr_1.3.1         tibble_3.2.1        ggplot2_3.5.1      
+[16] tidyverse_2.0.0     workflowr_1.7.1    
+
+loaded via a namespace (and not attached):
+  [1] RColorBrewer_1.1-3   rstudioapi_0.16.0    jsonlite_1.8.9      
+  [4] magrittr_2.0.3       rainbow_3.8          rmarkdown_2.28      
+  [7] fs_1.6.4             vctrs_0.6.5          aghq_0.4.1          
+ [10] RCurl_1.98-1.16      htmltools_0.5.8.1    curl_5.2.3          
+ [13] deSolve_1.40         TTR_0.24.4           sass_0.4.9          
+ [16] hdrcde_3.4           StanHeaders_2.32.10  pracma_2.4.4        
+ [19] KernSmooth_2.23-24   bslib_0.8.0          zoo_1.8-12          
+ [22] cachem_1.1.0         TMB_1.9.15           whisker_0.4.1       
+ [25] lifecycle_1.0.4      pkgconfig_2.0.3      R6_2.5.1            
+ [28] fastmap_1.2.0        digest_0.6.37        numDeriv_2016.8-1.1 
+ [31] colorspace_2.1-1     ps_1.8.0             rprojroot_2.0.4     
+ [34] fansi_1.0.6          timechange_0.3.0     httr_1.4.7          
+ [37] compiler_4.3.1       proxy_0.4-27         withr_3.0.2         
+ [40] tseries_0.10-58      inline_0.3.19        DBI_1.2.3           
+ [43] QuickJSR_1.3.1       pkgbuild_1.4.4       highr_0.11          
+ [46] MASS_7.3-60          classInt_0.4-10      loo_2.8.0           
+ [49] prophet_1.0          tools_4.3.1          units_0.8-5         
+ [52] lmtest_0.9-40        quantmod_0.4.26      httpuv_1.6.15       
+ [55] nnet_7.3-19          glue_1.8.0           quadprog_1.5-8      
+ [58] callr_3.7.6          nlme_3.1-166         promises_1.3.0      
+ [61] grid_4.3.1           sf_1.0-17            getPass_0.2-4       
+ [64] cluster_2.1.6        generics_0.1.3       gtable_0.3.6        
+ [67] fda_6.2.0            tzdb_0.4.0           class_7.3-22        
+ [70] data.table_1.16.2    hms_1.1.3            utf8_1.2.4          
+ [73] pillar_1.9.0         later_1.3.2          splines_4.3.1       
+ [76] lattice_0.22-6       ks_1.14.3            tidyselect_1.2.1    
+ [79] fds_1.8              knitr_1.48           git2r_0.33.0        
+ [82] gridExtra_2.3        urca_1.3-4           stats4_4.3.1        
+ [85] xfun_0.48            bridgesampling_1.1-2 statmod_1.5.0       
+ [88] matrixStats_1.4.1    timeDate_4041.110    rstan_2.32.6        
+ [91] mvQuad_1.0-8         stringi_1.8.4        yaml_2.3.10         
+ [94] codetools_0.2-20     evaluate_1.0.1       cli_3.6.3           
+ [97] RcppParallel_5.1.9   munsell_0.5.1        processx_3.8.4      
+[100] jquerylib_0.1.4      Rcpp_1.0.13-1        coda_0.19-4.1       
+[103] parallel_4.3.1       rstantools_2.4.0     MatrixModels_0.5-3  
+[106] fmesher_0.1.7        fracdiff_1.5-3       mclust_6.1.1        
+[109] bayesplot_1.11.1     Brobdingnag_1.2-9    bitops_1.0-9        
+[112] mvtnorm_1.3-1        scales_1.3.0         xts_0.14.0          
+[115] e1071_1.7-16         pcaPP_2.0-5          rlang_1.1.4         </code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+https://docs.mathjax.org/en/latest/web/configuration.html. This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
