@@ -23,7 +23,7 @@ These tutorials are organized progressively, starting with basic concepts and mo
 
 + [Fitting sGP Models to the Lynx Dataset: An Intermediate Tutorial](lynx.html)
 
++ [Forecasting with sGP: Comparison of Approaches](more_comparison.html)
 
-
-
++ [Sensitivity Analysis for sGP](sensitivity.html)
 
