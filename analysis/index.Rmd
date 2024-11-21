@@ -1,5 +1,5 @@
 ---
-title: "Online Tutorial for Fitting sGP"
+title: "Learn to Fit sGP Models: Online Tutorials"
 site: workflowr::wflow_site
 output:
   workflowr::wflow_html:
@@ -8,16 +8,16 @@ editor_options:
   chunk_output_type: console
 ---
 
-See [here](https://arxiv.org/abs/2305.09914) for an overview of the sGP model as well as its associated computational methods.
+For an overview of the sGP model and its computational methods, see [this paper](https://arxiv.org/abs/2305.09914).
 
-The package `BayesGP` is available on [CRAN](https://cran.r-project.org/web/packages/BayesGP/index.html), which efficiently implements Gaussian process priors (including the sGP) for various Bayesian hierarchical models.
+`BayesGP`, available on [CRAN](https://cran.r-project.org/web/packages/BayesGP/index.html),efficiently implements Gaussian process priors (including the sGP) for a variety of Bayesian hierarchical models.
 
-The package `sGPfit` is available on [GitHub](https://github.com/AgueroZZ/sGPfit), which can be used for more advanced applications of the sGP prior, including fitting the exact process through the state-space representation.
+`sGPfit`, available on [GitHub](https://github.com/AgueroZZ/sGPfit), is designed to help with more advanced applications of the sGP, including fitting the exact process via the state-space representation.
 
 
 **Tutorials:**
 
-The tutorials are organized from more basic to more advanced. It is recommended to start with the first tutorial and proceed in order.
+These tutorials are organized progressively, starting with basic concepts and moving to more advanced topics. We recommend beginning with the first tutorial and proceeding in order.
 
 + [Getting Started: Fitting sGP to a Synthetic Dataset](starter.html)
 
