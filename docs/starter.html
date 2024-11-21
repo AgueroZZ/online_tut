@@ -13,7 +13,7 @@
 
 <meta name="date" content="2024-11-20" />
 
-<title>A Starter Tutorial: Fitting sGP to a Synthetic Dataset</title>
+<title>Getting Started: Fitting sGP to a Synthetic Dataset</title>
 
 <script src="site_libs/header-attrs-2.28/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -351,8 +351,8 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">A Starter Tutorial: Fitting sGP to a
-Synthetic Dataset</h1>
+<h1 class="title toc-ignore">Getting Started: Fitting sGP to a Synthetic
+Dataset</h1>
 <h4 class="author">Ziang Zhang</h4>
 <h4 class="date">2024-11-20</h4>
 
@@ -514,13 +514,13 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrong7fb7a81">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrong1a0cfcb">
 <span class="glyphicon glyphicon-ok text-success"
-aria-hidden="true"></span> <strong>Repository version:</strong> 7fb7a81
+aria-hidden="true"></span> <strong>Repository version:</strong> 1a0cfcb
 </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrong7fb7a81"
+<div id="strongRepositoryversionstrong1a0cfcb"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -529,7 +529,7 @@ and connecting the code version to the results is critical for
 reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version 7fb7a81.
+The results in this page were generated with repository version 1a0cfcb.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -602,6 +602,40 @@ Message
 Rmd
 </td>
 <td>
+1a0cfcb
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2024-11-21
+</td>
+<td>
+workflowr::wflow_publish("analysis/starter.rmd")
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+c4bd829
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2024-11-21
+</td>
+<td>
+Build site.
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
 7fb7a81
 </td>
 <td>
@@ -630,9 +664,9 @@ source(&quot;code/functions.R&quot;)</code></pre>
 <p>In this tutorial, we introduce the basic steps to fit a sGP model
 using the seasonal B-spline approximation introduced in <a
 href="https://arxiv.org/abs/2305.09914">Zhang et al, 2024</a>.</p>
-<p>For the purpose of illustration, we will take one of the synthetic
-datasets described in the main paper. The dataset and its corresponding
-true function are shown below.</p>
+<p>For illustration, we use one of the synthetic datasets described in
+the main paper. The dataset and its corresponding true function are
+shown in the plots below.</p>
 <pre class="r"><code>n &lt;- 500
 location_of_interest &lt;- seq(0, 10, length.out = 500)
 true_f &lt;- function(x){
@@ -659,6 +693,43 @@ plot(location_of_interest, true_f(location_of_interest),
      pch = 20, cex = 0.5,
      ylab = &quot;y&quot;, xlab = &quot;x&quot;)</code></pre>
 <p><img src="figure/starter.rmd/unnamed-chunk-2-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-2-1">
+Past versions of unnamed-chunk-2-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-2-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+c4bd829
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2024-11-21
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>par(mfrow = c(1,1))</code></pre>
 <p>The hierarchical model we consider is as follows:</p>
 <p><span class="math display">\[\begin{equation}
@@ -671,14 +742,14 @@ g(x) &amp;\sim \text{sGP}(\sigma_x), \\
 \end{equation}\]</span></p>
 <p>We assume the sGP prior has a frequency of <span
 class="math inline">\(2\)</span> (<span class="math inline">\(\alpha =
-4\pi\)</span>), and we consider the following Exponential prior on the
-one-step PSD <span class="math inline">\(\sigma_x(1)\)</span> defined
-as: <span class="math display">\[
+4\pi\)</span>), and use an Exponential prior for the one-step PSD <span
+class="math inline">\(\sigma_x(1)\)</span> defined as: <span
+class="math display">\[
 \text{P}(\sigma_x(1) &gt; 2) = 0.1.
 \]</span></p>
-<p>For the individual level random intercept, we assume its standard
-deviation <span class="math inline">\(\sigma_\xi\)</span> has an
-Exponential prior with median at <span
+<p>The standard deviation <span
+class="math inline">\(\sigma_\xi\)</span> of the observation-level
+random intercept follows an Exponential prior with a median of <span
 class="math inline">\(1\)</span>.</p>
 <p>To make the computation more efficient, we will use <span
 class="math inline">\(10\)</span> equally spaced knots to define the
@@ -734,6 +805,43 @@ polygon(c(location_of_interest, rev(location_of_interest)),
 legend(&quot;topright&quot;, legend = c(&quot;True function&quot;, &quot;Posterior mean&quot;),
        col = c(&quot;black&quot;, &quot;blue&quot;), lty = c(1, 2), lwd = c(1, 1))</code></pre>
 <p><img src="figure/starter.rmd/unnamed-chunk-6-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-6-1">
+Past versions of unnamed-chunk-6-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-6-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+c4bd829
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2024-11-21
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>We can also just obtain the raw samples of <span
 class="math inline">\(g\)</span> at these locations:</p>
 <pre class="r"><code>post_g_raw &lt;- predict(mod, newdata = data.frame(x = location_of_interest), variable = &quot;x&quot;, only.samples = TRUE)
@@ -743,6 +851,43 @@ plot(location_of_interest, true_f(location_of_interest),
      ylab = &quot;y&quot;, xlab = &quot;x&quot;)
 matlines(location_of_interest, post_g_raw[,2:12], col = &quot;pink&quot;, lty = 2, lwd = 0.5)</code></pre>
 <p><img src="figure/starter.rmd/unnamed-chunk-7-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-7-1">
+Past versions of unnamed-chunk-7-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-7-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+c4bd829
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2024-11-21
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
