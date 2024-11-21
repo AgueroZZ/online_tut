@@ -1,0 +1,147 @@
+---
+title: "A Starter Tutorial: Fitting sGP to a Synthetic Dataset"
+author: "Ziang Zhang"
+date: "2024-11-20"
+output: workflowr::wflow_html
+editor_options:
+  chunk_output_type: console
+---
+
+```{r, message=FALSE, warning=FALSE}
+library(BayesGP)
+library(tidyverse)
+library(parallel)
+source("code/functions.R")
+```
+
+
+## Introduction
+
+In this tutorial, we introduce the basic steps to fit a sGP model using the seasonal B-spline approximation introduced in [Zhang et al, 2024](https://arxiv.org/abs/2305.09914).
+
+For the purpose of illustration, we will take one of the synthetic datasets described in the main paper.
+The dataset and its corresponding true function are shown below.
+
+```{r}
+n <- 500
+location_of_interest <- seq(0, 10, length.out = 500)
+true_f <- function(x){
+  if(x < 2){
+    return(2*sin(2 * 2 * pi * x) * (3-x))
+  } else if (x > 2 && x < 4){
+    return(2*sin(2 * 2 * pi * x))
+  } else{
+    return(2*sin(2 * 2 * pi * x) * (log(x-3) + 1))
+  }
+}
+true_f <- Vectorize(true_f)
+
+set.seed(123)
+data <- simulate_data_poisson(func = true_f, n = n, sigma = 0.5, region = c(0,10), offset = 0)
+
+par(mfrow = c(1,2))
+plot(data$x, data$y, type = "p", col = "black", 
+     pch = 20, cex = 0.5,
+     ylab = "y", xlab = "x")
+lines(location_of_interest, exp(true_f(location_of_interest)), col = "red", lwd = 2)
+plot(location_of_interest, true_f(location_of_interest),
+     type = "l", col = "black",
+     pch = 20, cex = 0.5,
+     ylab = "y", xlab = "x")
+par(mfrow = c(1,1))
+```
+
+
+The hierarchical model we consider is as follows:
+
+\begin{equation}
+\begin{aligned}
+Y_i|x_i,\xi_i &\sim \text{Poisson}(\lambda_i), \\
+\text{log}(\lambda_i) &= g(x_i) + \xi_i, \\
+g(x) &\sim \text{sGP}(\sigma_x), \\
+\xi_i &\sim \text{N}(0, \sigma_\xi^2).
+\end{aligned}
+\end{equation}
+
+We assume the sGP prior has a frequency of $2$ ($\alpha = 4\pi$), and we consider the following Exponential prior on the one-step PSD $\sigma_x(1)$ defined as:
+\[
+\text{P}(\sigma_x(1) > 2) = 0.1.
+\]
+
+For the individual level random intercept, we assume its standard deviation $\sigma_\xi$ has an Exponential prior with median at $1$.
+
+To make the computation more efficient, we will use $10$ equally spaced knots to define the B-spline basis, which will then be used to approximate the sGP prior.
+
+
+## Inference
+
+To make approximate Bayesian inference of the above model, we make use of the `BayesGP` package:
+
+```{r}
+mod <- BayesGP::model_fit(
+    y ~ f(
+      x,
+      model = "sgp",
+      region = c(0,10),
+      freq = 2,
+      k = 10, # number of knots
+      sd.prior = list(param = list(u = 2, alpha = 0.1), h = 1)
+    ) +
+      f(index, model = "iid", sd.prior = 1),
+    data = data,
+    family = "Poisson"
+  )
+```
+
+
+We can take a quick look at the posterior summary:
+
+```{r}
+summary(mod)
+```
+
+We can also obtain the posterior of $g$ at any location of interest:
+
+```{r}
+post_g <- predict(mod, newdata = data.frame(x = location_of_interest), variable = "x")
+head(post_g)
+```
+
+Take a look at the plot of them:
+
+```{r}
+plot(location_of_interest, true_f(location_of_interest),
+     type = "l", col = "black",
+     pch = 20, cex = 0.5,
+     ylab = "y", xlab = "x")
+lines(x = location_of_interest, y = (post_g$mean), col = "blue", lwd = 1, lty = 2)
+polygon(c(location_of_interest, rev(location_of_interest)),
+        c(post_g$q0.025, rev(post_g$q0.975)),
+        col = adjustcolor("blue", alpha.f = 0.2), border = NA)
+legend("topright", legend = c("True function", "Posterior mean"),
+       col = c("black", "blue"), lty = c(1, 2), lwd = c(1, 1))
+```
+
+
+We can also just obtain the raw samples of $g$ at these locations:
+```{r}
+post_g_raw <- predict(mod, newdata = data.frame(x = location_of_interest), variable = "x", only.samples = TRUE)
+plot(location_of_interest, true_f(location_of_interest),
+     type = "l", col = "black",
+     pch = 20, cex = 0.5,
+     ylab = "y", xlab = "x")
+matlines(location_of_interest, post_g_raw[,2:12], col = "pink", lty = 2, lwd = 0.5)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
