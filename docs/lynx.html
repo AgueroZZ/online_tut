@@ -13,7 +13,7 @@
 
 <meta name="date" content="2024-11-20" />
 
-<title>Fitting sGP to the lynx dataset</title>
+<title>An Intermediate Tutorial: Fitting sGP to the lynx dataset</title>
 
 <script src="site_libs/header-attrs-2.28/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -351,7 +351,8 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">Fitting sGP to the lynx dataset</h1>
+<h1 class="title toc-ignore">An Intermediate Tutorial: Fitting sGP to
+the lynx dataset</h1>
 <h4 class="author">Ziang Zhang</h4>
 <h4 class="date">2024-11-20</h4>
 
@@ -382,7 +383,7 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2024-11-20
+<strong>Last updated:</strong> 2024-11-21
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -513,13 +514,13 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongb167966">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrong64fcf99">
 <span class="glyphicon glyphicon-ok text-success"
-aria-hidden="true"></span> <strong>Repository version:</strong> b167966
+aria-hidden="true"></span> <strong>Repository version:</strong> 64fcf99
 </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongb167966"
+<div id="strongRepositoryversionstrong64fcf99"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -528,7 +529,7 @@ and connecting the code version to the results is critical for
 reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version b167966.
+The results in this page were generated with repository version 64fcf99.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -545,8 +546,11 @@ were generated:
 Ignored files:
     Ignored:    .DS_Store
     Ignored:    .Rproj.user/
+    Ignored:    code/.DS_Store
 
 Untracked files:
+    Untracked:  analysis/starter.rmd
+    Untracked:  code/functions.R
     Untracked:  code/tut.cpp
     Untracked:  code/tut.o
     Untracked:  code/tut.so
@@ -598,6 +602,40 @@ Message
 Rmd
 </td>
 <td>
+64fcf99
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2024-11-21
+</td>
+<td>
+workflowr::wflow_publish("analysis/lynx.rmd")
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+8e9829b
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2024-11-20
+</td>
+<td>
+Build site.
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
 b167966
 </td>
 <td>
@@ -626,6 +664,43 @@ and visualize it:</p>
 data$x &lt;- data$year - min(data$year)
 plot(lynx)</code></pre>
 <p><img src="figure/lynx.rmd/data-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-data-1">
+Past versions of data-1.png
+</button>
+</p>
+<div id="fig-data-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+8e9829b
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2024-11-20
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>Based on a visual examination of the dataset, we can observe an
 obvious 10-year quasi-periodic behavior in the lynx count with evolving
 amplitudes over time. Therefore, we will consider fitting the following
@@ -852,16 +927,127 @@ lines(upper ~ data$x, type = &quot;l&quot;, col = &quot;red&quot;, lty = &quot;d
 lines(mean ~ data$x, type = &quot;l&quot;, col = &quot;blue&quot;)
 lines(lower ~ data$x, type = &quot;l&quot;, col = &quot;red&quot;, lty = &quot;dashed&quot;)</code></pre>
 <p><img src="figure/lynx.rmd/unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-8-1">
+Past versions of unnamed-chunk-8-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-8-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+8e9829b
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2024-11-20
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>## Posterior of the SD parameter:
 prec_marg &lt;- fitted_mod$marginals[[1]]
 logpostsigma &lt;- compute_pdf_and_cdf(prec_marg,list(totheta = function(x) -2*log(x),fromtheta = function(x) exp(-x/2)),interpolation = &#39;spline&#39;)
 plot(pdf_transparam ~ transparam, data = logpostsigma, type = &#39;l&#39;, xlab = &quot;SD&quot;, ylab = &quot;Post&quot;)</code></pre>
 <p><img src="figure/lynx.rmd/unnamed-chunk-9-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-9-1">
+Past versions of unnamed-chunk-9-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-9-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+8e9829b
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2024-11-20
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>## Posterior of the Overdispersion parameter:
 prec_marg &lt;- fitted_mod$marginals[[2]]
 logpostsigma &lt;- compute_pdf_and_cdf(prec_marg,list(totheta = function(x) -2*log(x),fromtheta = function(x) exp(-x/2)),interpolation = &#39;spline&#39;)
 plot(pdf_transparam ~ transparam, data = logpostsigma, type = &#39;l&#39;, xlab = &quot;Overdispersion&quot;, ylab = &quot;Post&quot;)</code></pre>
 <p><img src="figure/lynx.rmd/unnamed-chunk-10-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-10-1">
+Past versions of unnamed-chunk-10-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-10-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+8e9829b
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2024-11-20
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>Now, let’s obtain the posterior samples and summary using the
 seasonal B-spline approach:</p>
 <pre class="r"><code>## Posterior samples:
@@ -879,16 +1065,127 @@ lines(upper2 ~ data$x, type = &quot;l&quot;, col = &quot;red&quot;, lty = &quot;
 lines(mean2 ~ data$x, type = &quot;l&quot;, col = &quot;blue&quot;)
 lines(lower2 ~ data$x, type = &quot;l&quot;, col = &quot;red&quot;, lty = &quot;dashed&quot;)</code></pre>
 <p><img src="figure/lynx.rmd/unnamed-chunk-13-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-13-1">
+Past versions of unnamed-chunk-13-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-13-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+8e9829b
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2024-11-20
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>## Posterior of the SD parameter:
 prec_marg &lt;- fitted_mod_sB$marginals[[1]]
 logpostsigma &lt;- compute_pdf_and_cdf(prec_marg,list(totheta = function(x) -2*log(x),fromtheta = function(x) exp(-x/2)),interpolation = &#39;spline&#39;)
 plot(pdf_transparam ~ transparam, data = logpostsigma, type = &#39;l&#39;, xlab = &quot;SD&quot;, ylab = &quot;Post&quot;)</code></pre>
 <p><img src="figure/lynx.rmd/unnamed-chunk-14-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-14-1">
+Past versions of unnamed-chunk-14-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-14-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+8e9829b
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2024-11-20
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>## Posterior of the Overdispersion parameter:
 prec_marg &lt;- fitted_mod_sB$marginals[[2]]
 logpostsigma &lt;- compute_pdf_and_cdf(prec_marg,list(totheta = function(x) -2*log(x),fromtheta = function(x) exp(-x/2)),interpolation = &#39;spline&#39;)
 plot(pdf_transparam ~ transparam, data = logpostsigma, type = &#39;l&#39;, xlab = &quot;Overdispersion&quot;, ylab = &quot;Post&quot;)</code></pre>
 <p><img src="figure/lynx.rmd/unnamed-chunk-15-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-15-1">
+Past versions of unnamed-chunk-15-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-15-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+8e9829b
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2024-11-20
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
