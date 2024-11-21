@@ -1,5 +1,5 @@
 ---
-title: "An Intermediate Tutorial: Fitting sGP to the lynx dataset"
+title: "Fitting sGP Models to the Lynx Dataset: An Intermediate Tutorial"
 author: "Ziang Zhang"
 date: "2024-11-20"
 output: workflowr::wflow_html
