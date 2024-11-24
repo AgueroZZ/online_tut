@@ -254,7 +254,7 @@ mean(abs(test_data$logy - predicted_means[-c(1:80)]))
 
 ### Fitting a Bayesian ARIMA
 
-We can also use the `stan_sarima` to fit a Bayesian ARIMA model through MCMC:
+We can also use the `stan_sarima` function from `bayesforecast` to fit a Bayesian ARIMA model through MCMC:
 
 ```{r warning=FALSE, message=FALSE, results='hide'}
 require(bayesforecast)
