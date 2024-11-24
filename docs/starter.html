@@ -37,6 +37,8 @@
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet" />
 
 <link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/main/img/reproducible.png">
 <!-- Add a small amount of space between sections. -->
@@ -338,7 +340,13 @@ div.tocify {
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="https://github.com/AgueroZZ/online_tut">
+    <span class="fab fa-github"></span>
+     
+    Source code
+  </a>
+</li>
       </ul>
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
@@ -380,7 +388,7 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2024-11-21
+<strong>Last updated:</strong> 2024-11-24
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -511,13 +519,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrong5c887d7">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZonlinetuttree1709c74f174ad1e910e2f359c0349b5138f86dfctargetblank1709c74a">
 <span class="glyphicon glyphicon-ok text-success"
-aria-hidden="true"></span> <strong>Repository version:</strong> 5c887d7
+aria-hidden="true"></span> <strong>Repository version:</strong>
+<a href="https://github.com/AgueroZZ/online_tut/tree/1709c74f174ad1e910e2f359c0349b5138f86dfc" target="_blank">1709c74</a>
 </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrong5c887d7"
+<div
+id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZonlinetuttree1709c74f174ad1e910e2f359c0349b5138f86dfctargetblank1709c74a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -526,7 +536,8 @@ and connecting the code version to the results is critical for
 reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version 5c887d7.
+The results in this page were generated with repository version
+<a href="https://github.com/AgueroZZ/online_tut/tree/1709c74f174ad1e910e2f359c0349b5138f86dfc" target="_blank">1709c74</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -542,19 +553,21 @@ were generated:
 <pre><code>
 Ignored files:
     Ignored:    .DS_Store
+    Ignored:    .Rhistory
     Ignored:    .Rproj.user/
     Ignored:    analysis/.DS_Store
+    Ignored:    analysis/.Rhistory
     Ignored:    code/.DS_Store
 
 Untracked files:
-    Untracked:  code/functions.R
-    Untracked:  code/tut.cpp
     Untracked:  code/tut.o
     Untracked:  code/tut.so
 
 Unstaged changes:
-    Modified:   analysis/_site.yml
-    Deleted:    analysis/license.Rmd
+    Modified:   analysis/index.Rmd
+    Modified:   analysis/lynx.rmd
+    Modified:   analysis/more_comparison.rmd
+    Modified:   analysis/sensitivity.rmd
 
 </code></pre>
 <p>
@@ -601,10 +614,27 @@ Message
 <tbody>
 <tr>
 <td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/AgueroZZ/online_tut/blob/1709c74f174ad1e910e2f359c0349b5138f86dfc/analysis/starter.rmd" target="_blank">1709c74</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2024-11-24
+</td>
+<td>
+workflowr::wflow_publish("analysis/starter.rmd")
+</td>
+</tr>
+<tr>
+<td>
 html
 </td>
 <td>
-563118f
+<a href="https://rawcdn.githack.com/AgueroZZ/online_tut/fa8c8edbd1d8deaf73aaf5c4e2dad4c23a9e95b1/docs/starter.html" target="_blank">fa8c8ed</a>
 </td>
 <td>
 Ziang Zhang
@@ -621,7 +651,7 @@ Build site.
 html
 </td>
 <td>
-daac389
+<a href="https://rawcdn.githack.com/AgueroZZ/online_tut/563118f2d210561ca8ca6d49a6af0affb785632d/docs/starter.html" target="_blank">563118f</a>
 </td>
 <td>
 Ziang Zhang
@@ -638,7 +668,24 @@ Build site.
 html
 </td>
 <td>
-96b32c6
+<a href="https://rawcdn.githack.com/AgueroZZ/online_tut/daac3893e987836f011a3058fde95cc9bbc8de0e/docs/starter.html" target="_blank">daac389</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2024-11-21
+</td>
+<td>
+Build site.
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/AgueroZZ/online_tut/96b32c654cb177e5b308d292040964036163ccd6/docs/starter.html" target="_blank">96b32c6</a>
 </td>
 <td>
 Ziang Zhang
@@ -655,7 +702,7 @@ Build site.
 Rmd
 </td>
 <td>
-1a0cfcb
+<a href="https://github.com/AgueroZZ/online_tut/blob/1a0cfcbbc3a1b643e8bc73b77da77be87f9ba816/analysis/starter.rmd" target="_blank">1a0cfcb</a>
 </td>
 <td>
 Ziang Zhang
@@ -672,7 +719,7 @@ workflowr::wflow_publish("analysis/starter.rmd")
 html
 </td>
 <td>
-c4bd829
+<a href="https://rawcdn.githack.com/AgueroZZ/online_tut/c4bd82970d0b1f8e56d7a066eab61a4ec44443bd/docs/starter.html" target="_blank">c4bd829</a>
 </td>
 <td>
 Ziang Zhang
@@ -689,7 +736,7 @@ Build site.
 Rmd
 </td>
 <td>
-7fb7a81
+<a href="https://github.com/AgueroZZ/online_tut/blob/7fb7a81e887db511fe2d9fd681999da20caec340/analysis/starter.rmd" target="_blank">7fb7a81</a>
 </td>
 <td>
 Ziang Zhang
@@ -712,8 +759,8 @@ workflowr::wflow_publish("analysis/starter.rmd")
 library(tidyverse)
 library(parallel)
 source(&quot;code/functions.R&quot;)</code></pre>
-<div id="introduction" class="section level2">
-<h2>Introduction</h2>
+<div id="a-synthetic-dataset" class="section level2">
+<h2>A Synthetic Dataset</h2>
 <p>In this tutorial, we introduce the basic steps to fit a sGP model
 using the seasonal B-spline approximation introduced in <a
 href="https://arxiv.org/abs/2305.09914">Zhang et al, 2024</a>.</p>
@@ -770,7 +817,7 @@ Date
 <tbody>
 <tr>
 <td>
-c4bd829
+<a href="https://github.com/AgueroZZ/online_tut/blob/c4bd82970d0b1f8e56d7a066eab61a4ec44443bd/docs/figure/starter.rmd/unnamed-chunk-2-1.png" target="_blank">c4bd829</a>
 </td>
 <td>
 Ziang Zhang
@@ -788,29 +835,32 @@ Ziang Zhang
 <p><span class="math display">\[\begin{equation}
 \begin{aligned}
 Y_i|x_i,\xi_i &amp;\sim \text{Poisson}(\lambda_i), \\
-\text{log}(\lambda_i) &amp;= g(x_i) + \xi_i, \\
-g(x) &amp;\sim \text{sGP}(\sigma_x), \\
+\text{log}(\lambda_i) &amp;= \beta_0 + g(x_i) + \xi_i, \\
+g(x) &amp;\sim \text{sGP}_{\alpha}(\sigma_x), \\
 \xi_i &amp;\sim \text{N}(0, \sigma_\xi^2).
 \end{aligned}
 \end{equation}\]</span></p>
 <p>We assume the sGP prior has a frequency of <span
 class="math inline">\(2\)</span> (<span class="math inline">\(\alpha =
 4\pi\)</span>), and use an Exponential prior for the one-step PSD <span
-class="math inline">\(\sigma_x(1)\)</span> defined as: <span
+class="math inline">\(\sigma(1)\)</span> defined as: <span
 class="math display">\[
-\text{P}(\sigma_x(1) &gt; 2) = 0.1.
+\text{P}(\sigma(1) &gt; 2) = 0.1.
 \]</span></p>
 <p>The standard deviation <span
 class="math inline">\(\sigma_\xi\)</span> of the observation-level
-random intercept follows an Exponential prior with a median of <span
-class="math inline">\(1\)</span>.</p>
+random intercept that accounts for the overdispersion, follows an
+Exponential prior with a median of <span
+class="math inline">\(1\)</span>. All the fixed effects (including the
+boundary effects of the sGP) are assigned independent normal priors with
+zero mean and variance <span class="math inline">\(1000\)</span>.</p>
 <p>To make the computation more efficient, we will use <span
 class="math inline">\(10\)</span> equally spaced knots to define the
 B-spline basis, which will then be used to approximate the sGP
 prior.</p>
 </div>
-<div id="inference" class="section level2">
-<h2>Inference</h2>
+<div id="inference-using-bayesgp" class="section level2">
+<h2>Inference using <code>BayesGP</code></h2>
 <p>To make approximate Bayesian inference of the above model, we make
 use of the <code>BayesGP</code> package:</p>
 <pre class="r"><code>mod &lt;- BayesGP::model_fit(
@@ -837,15 +887,15 @@ For Normal prior, P1 is its mean and P2 is its variance.
 For Exponential prior, prior is specified as P(theta &gt; P1) = P2. </code></pre>
 <p>We can also obtain the posterior of <span
 class="math inline">\(g\)</span> at any location of interest:</p>
-<pre class="r"><code>post_g &lt;- predict(mod, newdata = data.frame(x = location_of_interest), variable = &quot;x&quot;)
+<pre class="r"><code>post_g &lt;- predict(mod, newdata = data.frame(x = location_of_interest), variable = &quot;x&quot;, include.intercept = FALSE)
 head(post_g)</code></pre>
-<pre><code>           x     q0.025      q0.5   q0.975      mean
-1 0.00000000 -0.1867575 0.2723952 0.711317 0.2688137
-2 0.02004008  1.2278211 1.6493109 2.052013 1.6462239
-3 0.04008016  2.5478229 2.9261264 3.291498 2.9251860
-4 0.06012024  3.6668587 4.0243567 4.373277 4.0238335
-5 0.08016032  4.5179810 4.8739401 5.217268 4.8721472
-6 0.10020040  5.0675664 5.4185435 5.772141 5.4165004</code></pre>
+<pre><code>           x     q0.025      q0.5    q0.975     mean
+1 0.00000000 -0.2694881 0.1600508 0.5893843 0.159338
+2 0.02004008  1.1280252 1.5363202 1.9418746 1.536748
+3 0.04008016  2.4315792 2.8178895 3.2127484 2.815710
+4 0.06012024  3.5301288 3.9165008 4.2996541 3.914358
+5 0.08016032  4.3697162 4.7602353 5.1481787 4.762672
+6 0.10020040  4.9049295 5.3075811 5.6994210 5.307025</code></pre>
 <p>Take a look at the plot of them:</p>
 <pre class="r"><code>plot(location_of_interest, true_f(location_of_interest),
      type = &quot;l&quot;, col = &quot;black&quot;,
@@ -882,7 +932,7 @@ Date
 <tbody>
 <tr>
 <td>
-c4bd829
+<a href="https://github.com/AgueroZZ/online_tut/blob/c4bd82970d0b1f8e56d7a066eab61a4ec44443bd/docs/figure/starter.rmd/unnamed-chunk-6-1.png" target="_blank">c4bd829</a>
 </td>
 <td>
 Ziang Zhang
@@ -895,52 +945,29 @@ Ziang Zhang
 </table>
 </div>
 </div>
+<p>The quantiles reported from <code>predict</code> can be easily
+modified by setting the <code>quantiles</code> argument. For example, to
+obtain the <span class="math inline">\(0.05\)</span> and <span
+class="math inline">\(0.95\)</span> quantiles, we can set
+<code>quantiles = c(0.05, 0.95)</code>.</p>
+<pre class="r"><code>post_g &lt;- predict(mod, newdata = data.frame(x = location_of_interest), variable = &quot;x&quot;, include.intercept = FALSE, quantiles = c(0.05, 0.95))
+head(post_g)</code></pre>
+<pre><code>           x      q0.05     q0.95     mean
+1 0.00000000 -0.2078407 0.5136182 0.159338
+2 0.02004008  1.1933600 1.8852268 1.536748
+3 0.04008016  2.4888903 3.1356789 2.815710
+4 0.06012024  3.5991912 4.2339789 3.914358
+5 0.08016032  4.4427572 5.0866405 4.762672
+6 0.10020040  4.9670371 5.6440898 5.307025</code></pre>
 <p>We can also just obtain the raw samples of <span
 class="math inline">\(g\)</span> at these locations:</p>
-<pre class="r"><code>post_g_raw &lt;- predict(mod, newdata = data.frame(x = location_of_interest), variable = &quot;x&quot;, only.samples = TRUE)
+<pre class="r"><code>post_g_raw &lt;- predict(mod, newdata = data.frame(x = location_of_interest), variable = &quot;x&quot;, only.samples = TRUE, include.intercept = FALSE)
 plot(location_of_interest, true_f(location_of_interest),
      type = &quot;l&quot;, col = &quot;black&quot;,
      pch = 20, cex = 0.5,
      ylab = &quot;y&quot;, xlab = &quot;x&quot;)
 matlines(location_of_interest, post_g_raw[,2:12], col = &quot;pink&quot;, lty = 2, lwd = 0.5)</code></pre>
-<p><img src="figure/starter.rmd/unnamed-chunk-7-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-7-1">
-Past versions of unnamed-chunk-7-1.png
-</button>
-</p>
-<div id="fig-unnamed-chunk-7-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-c4bd829
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2024-11-21
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
+<p><img src="figure/starter.rmd/unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;" /></p>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
