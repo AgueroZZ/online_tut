@@ -10,7 +10,7 @@ editor_options:
 
 For an overview of the sGP model and its computational methods, see [this paper](https://arxiv.org/abs/2305.09914).
 
-`BayesGP`, available on [CRAN](https://cran.r-project.org/web/packages/BayesGP/index.html),efficiently implements Gaussian process priors (including the sGP) for a variety of Bayesian hierarchical models.
+`BayesGP`, available on [CRAN](https://cran.r-project.org/web/packages/BayesGP/index.html), efficiently implements Gaussian process priors (including the sGP) for a variety of Bayesian hierarchical models.
 
 `sGPfit`, available on [GitHub](https://github.com/AgueroZZ/sGPfit), is designed to help with more advanced applications of the sGP, including fitting the exact process via the state-space representation.
 
@@ -26,4 +26,20 @@ These tutorials are organized progressively, starting with basic concepts and mo
 + [Forecasting with sGP: Comparison of Approaches](more_comparison.html)
 
 + [Sensitivity Analysis for sGP](sensitivity.html)
+
+
+**Background Readings:**
+
+Our implementation of the sGP model is grounded in the framework of Bayesian hierarchical models, specifically the Extended Latent Gaussian Models (ELGMs). Approximate Bayesian inference for ELGMs typically relies on the Laplace approximation and Adaptive Gauss-Hermite Quadrature (AGHQ).
+
+For readers less familiar with these concepts, we recommend the following resources:
+
++ [ELGMs and their posterior approximation algorithm](https://www.tandfonline.com/doi/full/10.1080/10618600.2022.2099403?casa_token=ft2At-UOBTIAAAAA%3Ab1e5AGFyefDSdwFHE2r9Q7Mcpv-npuWnGIH1LwyGzYdhs9DjHwcq32JBbILmz_ukn7pgWtVa7lAytg)
+
++ [LGMs and the Integrated Nested Laplace Approximation (INLA)](https://academic.oup.com/jrsssb/article/71/2/319/7092907?login=false)
+
++ [AGHQ and its application in fitting ELGMs
+](https://www.tandfonline.com/doi/full/10.1080/01621459.2022.2141635)
+
+Additionally, for readers seeking more tutorials on the SPDE framework, from which the sGP prior is derived, we recommend [this work](https://link.springer.com/article/10.1007/s13253-019-00377-z) by Miller et al. (2020).
 
