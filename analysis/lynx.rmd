@@ -7,6 +7,12 @@ editor_options:
   chunk_output_type: console
 ---
 
+```{r message=FALSE, warning=FALSE, results='hide'}
+require(Matrix)
+require(tidyverse)
+```
+
+
 ## Introduction:
 
 In this tutorial, we will use the `lynx` dataset as an example, which can be accessed directly from R. Let's load the dataset and visualize it:
@@ -31,17 +37,67 @@ $$
 $$
 Here, each $y_i$ represents the lynx count, $x_i$ represents the number of years since 1821, and $\xi_i$ is an observation-level random intercept to account for overdispersion effect.
 
-## Preparation:
 
-To carry out our inference in a fully Bayesian manner, we will load the following required packages:
+## Prior Elicitation:
+
+To specify the priors for the sGP boundary conditions and the intercept parameter, we assume independent normal priors with mean 0 and variance 1000.
+For the overdispersion parameter $\sigma_\xi$, we assign an exponential prior with $P(\sigma_\xi > 1) = 0.01$.
+
+To determine the prior for the standard deviation parameter $\sigma$ of the sGP, we employ the concept of predictive standard deviation (PSD). We start with an exponential prior on the 50 years PSD:
+$$P(\sigma(50)>1) = 0.01.$$
+To convert this prior to the original standard deviation parameter $\sigma$, we use the `prior_conversion_sgp` function from the `BayesGP` package:
+
+```{r prior-conversion}
+require(BayesGP)
+prior_PSD <- list(u = 1, alpha = 0.01)
+prior_SD <- prior_conversion_sgp(d = 50, a = 2*pi/10, prior = prior_PSD)
+prior_SD
+```
+
+Based on the above computation, the corresponding exponential prior on the original SD parameter $\sigma$ is: $$P(\sigma>0.126) = 0.01.$$
+
+
+
+## Inference in the easy way:
+
+The easy way to fit this model is to use the `BayesGP` package, which provides a simple interface to fit the sGP model using its sB-spline approximation.
+
+```{r}
+fit <- BayesGP::model_fit(
+  formula = y ~ f(x = year, model = "sgp",
+                  period = 10,
+                  sd.prior = list(param = prior_PSD, h = 50)) +
+                  f(x, model = "iid", sd.prior = 1), 
+  data = data,
+  family = "poisson")
+```
+
+Note that we do not need to manually convert the prior for PSD to SD when using the `BayesGP` package. 
+The package automatically handles this conversion internally when `h` is specified in the `sd.prior` argument.
+
+Let's take a quick look a the model fit:
+
+```{r}
+par(mfrow = c(2,2))
+plot(fit)
+par(mfrow = c(1,1))
+```
+
+
+
+## Inference from scratch:
+
+Now, for users who wish to do more exercises with the sGP, we will demonstrate how to fit the Bayesian hierarchical model from scratch using the `sGPfit` package.
+We will consider fitting both the exact sGP model using the state-space representation and the approximate sGP model using the seasonal B-spline (sB-spline) approximation.
+
+### Preparation:
+
+To carry out our inference from scratch in a fully Bayesian manner, we will load the following required packages:
 
 ```{r package, message=FALSE, warning=FALSE}
 require(sGPfit)
-require(BayesGP)
 require(aghq)
 require(TMB)
-require(tidyverse)
-require(Matrix)
 ```
 
 If you haven't installed the prototype package sGPfit yet, you can download it from GitHub using the following command: `devtools::install_git("https://github.com/AgueroZZ/sGPfit")`.
@@ -56,28 +112,7 @@ dyn.load(dynlib("code/tut"))
 Once the C++ file is compiled and the library is loaded, we can proceed with the remaining inference procedures.
 
 
-## Prior Elicitation:
-
-To specify the priors for the sGP boundary conditions and the intercept parameter, we assume independent normal priors with mean 0 and variance 1000.
-For the overdispersion parameter $\sigma_\xi$, we assign an exponential prior with $P(\sigma_\xi > 1) = 0.01$.
-
-
-To determine the prior for the standard deviation parameter $\sigma$ of the sGP, we employ the concept of predictive standard deviation (PSD). We start with an exponential prior on the 50 years PSD:
-$$P(\sigma(50)>1) = 0.01.$$
-To convert this prior to the original standard deviation parameter $\sigma$, we use the `compute_d_step_sGPsd` function from the `sGPfit` package:
-
-```{r prior-conversion}
-prior_PSD <- list(u = 1, alpha = 0.01)
-correction_factor <- sGPfit::compute_d_step_sGPsd(d = 50, a = 2*pi/10)
-prior_SD <- list(u = prior_PSD$u/correction_factor, alpha = prior_PSD$alpha)
-prior_SD
-```
-
-Based on the above computation, the corresponding exponential prior on the original SD parameter $\sigma$ is: $$P(\sigma>0.126) = 0.01.$$
-
-
-## Inference of the quasi-periodic function:
-
+### Exact State-Space Approach:
 First, we need to set up the design matrix `X` for the two boundary conditions and the intercept parameter:
 
 ```{r warning=FALSE, message=FALSE}
@@ -86,12 +121,6 @@ a <- 2*pi/10
 X <- as(cbind(cos(a*x),sin(a*x),1), "dgTMatrix")
 ```
 
-To perform inference for the unknown function $g$ using the sGP, we have two possible approaches:
-
-- \textbf{Exact approach through the state-space representation:} This approach is most efficient when the locations `x` are equally spaced. For large datasets with irregularly spaced locations, the second approach using the seasonal B-spline (sB-spline) approximation is more computationally efficient.
-- \textbf{Approximate approach through the seasonal B-spline (sB-spline) approximation:} The sGP is approximated as $\tilde{g}k(x) = \sum{i=1}^k w_i \psi_i(x)$, where ${\psi_i, i \in [k]}$ is a set of sB-spline basis functions, and $\boldsymbol{w} = {w_i, i \in [k]}$ is a set of Gaussian weights.
-
-### Inference with the State-Space approach:
 
 To use the state-space representation, we need to create two additional matrices: $B$ and $Q$. The matrix $B$ is the design matrix of each value of $[g(x_i),g'(x_i)]$, which will be (mostly) a diagonal matrix in this case. The matrix $Q$ is the precision matrix of $[g(x),g'(x)]$, which can be constructed using the `joint_prec_construct` function.
 
@@ -104,7 +133,6 @@ Q <- as(as(Q, "matrix"),"dgTMatrix")
 ```
 
 With the matrices ready, the model can be fitted using `aghq` as follows:
-
 
 ```{r message=FALSE, result = "hide"}
 tmbdat <- list(
@@ -143,7 +171,10 @@ fitted_mod <- aghq::marginal_laplace_tmb(ff,5,c(0,0))
 
 
 
-### Inference with the seasonal-B spline approach:
+### Approximate sB-Spline Approach:
+
+Implementing the exact state-space representation can be computationally expensive, when the sample size is very large with irregularly spaced locations.
+In such cases, the sB-spline approximation can be a more efficient alternative.
 
 To use the sB-spline approach, the sGP is approximated as $\tilde{g}_k(x) = \sum_{i=1}^k w_i \psi_i(x)$, where $\{\psi_i, i \in [k]\}$ is a set of sB-spline basis functions, and $\boldsymbol{w} = \{w_i, i \in [k]\}$ is a set of Gaussian weights.
 
@@ -195,7 +226,7 @@ fitted_mod_sB <- aghq::marginal_laplace_tmb(ff,5,c(0,0))
 ```
 
 
-### Comparing the results from the two approachs
+### Comparison:
 
 First, let's obtain the posterior samples and summary using the state-space representation:
 
@@ -215,25 +246,22 @@ lower <- apply(as.matrix(g_samps), MARGIN = 1, quantile, p = 0.025)
 Next, let's plot the posterior results obtained from the state-space representation:
 
 ```{r}
+par(mfrow = c(2,2))
 ## Plotting
 plot(log(data$y) ~ data$x, xlab = "time", ylab = "Posterior of g(x)", ylim = c(3.1,9))
 lines(upper ~ data$x, type = "l", col = "red", lty = "dashed")
 lines(mean ~ data$x, type = "l", col = "blue")
 lines(lower ~ data$x, type = "l", col = "red", lty = "dashed")
-```
 
-```{r}
 ## Posterior of the SD parameter:
 prec_marg <- fitted_mod$marginals[[1]]
 logpostsigma <- compute_pdf_and_cdf(prec_marg,list(totheta = function(x) -2*log(x),fromtheta = function(x) exp(-x/2)),interpolation = 'spline')
 plot(pdf_transparam ~ transparam, data = logpostsigma, type = 'l', xlab = "SD", ylab = "Post")
-```
-
-```{r}
 ## Posterior of the Overdispersion parameter:
 prec_marg <- fitted_mod$marginals[[2]]
 logpostsigma <- compute_pdf_and_cdf(prec_marg,list(totheta = function(x) -2*log(x),fromtheta = function(x) exp(-x/2)),interpolation = 'spline')
 plot(pdf_transparam ~ transparam, data = logpostsigma, type = 'l', xlab = "Overdispersion", ylab = "Post")
+par(mfrow = c(1,1))
 ```
 
 Now, let's obtain the posterior samples and summary using the seasonal B-spline approach:
@@ -254,23 +282,19 @@ lower2 <- apply(as.matrix(g_samps_2), MARGIN = 1, quantile, p = 0.025)
 Finally, let's plot the posterior results obtained from the seasonal B-spline approach:
 
 ```{r}
+par(mfrow = c(2,2))
 ## Plotting
 plot(log(data$y) ~ data$x, xlab = "time", ylab = "Posterior of g(x)", ylim = c(3.1,9))
 lines(upper2 ~ data$x, type = "l", col = "red", lty = "dashed")
 lines(mean2 ~ data$x, type = "l", col = "blue")
 lines(lower2 ~ data$x, type = "l", col = "red", lty = "dashed")
-```
-
-```{r}
 ## Posterior of the SD parameter:
 prec_marg <- fitted_mod_sB$marginals[[1]]
 logpostsigma <- compute_pdf_and_cdf(prec_marg,list(totheta = function(x) -2*log(x),fromtheta = function(x) exp(-x/2)),interpolation = 'spline')
 plot(pdf_transparam ~ transparam, data = logpostsigma, type = 'l', xlab = "SD", ylab = "Post")
-```
-
-```{r}
 ## Posterior of the Overdispersion parameter:
 prec_marg <- fitted_mod_sB$marginals[[2]]
 logpostsigma <- compute_pdf_and_cdf(prec_marg,list(totheta = function(x) -2*log(x),fromtheta = function(x) exp(-x/2)),interpolation = 'spline')
 plot(pdf_transparam ~ transparam, data = logpostsigma, type = 'l', xlab = "Overdispersion", ylab = "Post")
+par(mfrow = c(1,1))
 ```
