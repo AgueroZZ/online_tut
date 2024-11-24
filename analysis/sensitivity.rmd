@@ -36,7 +36,7 @@ region_lynx <- c(1821,1960)
 ```
 
 
-### Trying different priors
+## Varying the threshold
 
 First, we write a function that takes in the threshold $u$ and the exceedance probability $q$ and fits the sGP model with the corresponding prior on $\sigma(50)$, and then returns the posterior summary of the fitted model.
 
@@ -97,6 +97,10 @@ coverage <- lapply(pred_summary, function(x) mean(data$logy > x$q0.1 & data$logy
 plot(u_vec, coverage, type = "l", col = "blue", lwd = 2, xlab = "u", ylab = "Coverage", ylim = c(0,1))
 abline(h = 0.8, col = "red", lty = "dashed")
 ```
+
+
+## Varying the exceedance probability
+
 
 Next, we replicate the same analysis for other exceedance probabilities:
 
