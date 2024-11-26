@@ -45,7 +45,9 @@ For the overdispersion parameter $\sigma_\xi$, we assign an exponential prior wi
 
 To determine the prior for the standard deviation parameter $\sigma$ of the sGP, we employ the concept of predictive standard deviation (PSD). We start with an exponential prior on the 50 years PSD:
 $$P(\sigma(50)>1) = 0.01.$$
-To convert this prior to the original standard deviation parameter $\sigma$, we use the `prior_conversion_sgp` function from the `BayesGP` package:
+
+Overall, we highly recommend users to work on the PSD scale when specifying the prior for the sGP model as it is more interpretable and easier to elicit.
+However if the users hope to see the prior on the original standard deviation scale, the function `prior_conversion_sgp` in the `BayesGP` package can be used to convert the prior from the PSD scale to the original standard deviation scale.
 
 ```{r prior-conversion}
 require(BayesGP)
@@ -55,7 +57,10 @@ prior_SD
 ```
 
 Based on the above computation, the corresponding exponential prior on the original SD parameter $\sigma$ is: $$P(\sigma>0.126) = 0.01.$$
-
+Note that this corresponds to an Exponential distribution with median:
+```{r}
+INLA::inla.pc.qprec(0.5, u=prior_SD$u, alpha = prior_SD$alpha)^{-0.5}
+```
 
 
 ## Inference in the easy way:
