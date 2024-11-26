@@ -388,7 +388,7 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2024-11-24
+<strong>Last updated:</strong> 2024-11-26
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -519,15 +519,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZonlinetuttree77ac32805b6c5d533b9079aaa66abd3066edd3eatargetblank77ac328a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZonlinetuttree9cc521451b4ab4d7166ab4a18ec641b4ec87e103targetblank9cc5214a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/AgueroZZ/online_tut/tree/77ac32805b6c5d533b9079aaa66abd3066edd3ea" target="_blank">77ac328</a>
+<a href="https://github.com/AgueroZZ/online_tut/tree/9cc521451b4ab4d7166ab4a18ec641b4ec87e103" target="_blank">9cc5214</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZonlinetuttree77ac32805b6c5d533b9079aaa66abd3066edd3eatargetblank77ac328a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZonlinetuttree9cc521451b4ab4d7166ab4a18ec641b4ec87e103targetblank9cc5214a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -537,7 +537,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/AgueroZZ/online_tut/tree/77ac32805b6c5d533b9079aaa66abd3066edd3ea" target="_blank">77ac328</a>.
+<a href="https://github.com/AgueroZZ/online_tut/tree/9cc521451b4ab4d7166ab4a18ec641b4ec87e103" target="_blank">9cc5214</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -564,7 +564,7 @@ Untracked files:
     Untracked:  code/tut.so
 
 Unstaged changes:
-    Modified:   analysis/index.Rmd
+    Modified:   analysis/more_comparison.rmd
 
 </code></pre>
 <p>
@@ -609,6 +609,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/AgueroZZ/online_tut/blob/9cc521451b4ab4d7166ab4a18ec641b4ec87e103/analysis/sensitivity.rmd" target="_blank">9cc5214</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2024-11-26
+</td>
+<td>
+workflowr::wflow_publish("analysis/sensitivity.rmd")
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/AgueroZZ/online_tut/d296bb48b31ada0375b6394acd24afabf0e6726d/docs/sensitivity.html" target="_blank">d296bb4</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2024-11-24
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -688,10 +722,9 @@ prior on <span class="math inline">\(\sigma\)</span> is through an
 Exponential prior on its <span class="math inline">\(h\)</span>-step
 predictive SD <span class="math inline">\(\sigma(h)\)</span>, with the
 form of <span class="math display">\[
-\text{P}[\sigma(h)&gt;u] = q,
-\]</span> where <span class="math inline">\(u\)</span> is the threshold
-and <span class="math inline">\(q\)</span> is the exceedance
-probability.</p>
+\text{P}[\sigma(h)&gt;u] = 0.5,
+\]</span> where <span class="math inline">\(u\)</span> is prior
+median.</p>
 <p>In this tutorial, we will examine the sensitivity of the sGP model to
 the choice of the prior on <span class="math inline">\(\sigma\)</span>
 by fitting the model to the Lynx dataset with different priors on <span
@@ -715,7 +748,7 @@ and then returns the posterior summary of the fitted model.</p>
 <pre class="r"><code>fit_once &lt;- function(u, alpha){
   pred_SD &lt;- list(u = u, alpha = alpha)
   results_sGP &lt;- BayesGP::model_fit(
-    formula = y ~ f(x = year, model = &quot;sgp&quot;, k = 100,
+    formula = y ~ f(x = year, model = &quot;sgp&quot;, k = 30,
                     period = 10,
                     sd.prior = list(param = pred_SD, h = 50), 
                     initial_location = &quot;left&quot;, region = region_lynx) +
@@ -725,11 +758,10 @@ and then returns the posterior summary of the fitted model.</p>
   pred_g1 &lt;- predict(results_sGP, newdata = data.frame(x = x, year = data$year), variable = &quot;year&quot;, include.intercept = T, quantiles = c(0.1,0.9))
   return(pred_g1)
 }</code></pre>
-<p>First, we fixed the exceedance probability at <span
-class="math inline">\(0.01\)</span> and tried different values of <span
-class="math inline">\(u\)</span>.</p>
-<pre class="r"><code>alpha = 0.01
-u_vec = seq(0.1, 1, by = 0.1)
+<p>Let’s try different values of <span
+class="math inline">\(u\)</span>:</p>
+<pre class="r"><code>alpha = 0.5
+u_vec = c(0.01, 0.03, 0.05, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.8, 1, 1.5, 2)
 pred_summary &lt;- lapply(u_vec, fit_once, alpha = alpha)
 pred_means &lt;- do.call(rbind, lapply(pred_summary, function(x) x$mean))</code></pre>
 <p>Let’s plot the posterior mean</p>
@@ -783,7 +815,7 @@ Ziang Zhang
 <p>We could also plot the MSE of the posterior mean for different values
 of <span class="math inline">\(u\)</span>.</p>
 <pre class="r"><code>MSEs &lt;- apply(pred_means, 1, function(x) mean((x - data$logy)^2))
-plot(u_vec, MSEs, type = &quot;l&quot;, col = &quot;blue&quot;, lwd = 2, xlab = &quot;u&quot;, ylab = &quot;MSE&quot;)</code></pre>
+plot(u_vec, MSEs, type = &quot;o&quot;, col = &quot;blue&quot;, lwd = 2, xlab = &quot;u&quot;, ylab = &quot;MSE&quot;)</code></pre>
 <p><img src="figure/sensitivity.rmd/unnamed-chunk-6-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-6-1">
@@ -822,14 +854,14 @@ Ziang Zhang
 </table>
 </div>
 </div>
-<p>Overall, unless the value of <span class="math inline">\(u\)</span>
-is too small, the MSE is not sensitive to the choice of <span
-class="math inline">\(u\)</span>.</p>
-<p>We could similar check how the coverage of the 95% credible interval
+<p>Overall, unless the value of the prior median <span
+class="math inline">\(u\)</span> is too small, the MSE is not sensitive
+to <span class="math inline">\(u\)</span>.</p>
+<p>We could similar check how the coverage of the 80% credible interval
 changes with different values of <span
 class="math inline">\(u\)</span>.</p>
 <pre class="r"><code>coverage &lt;- lapply(pred_summary, function(x) mean(data$logy &gt; x$q0.1 &amp; data$logy &lt; x$q0.9))
-plot(u_vec, coverage, type = &quot;l&quot;, col = &quot;blue&quot;, lwd = 2, xlab = &quot;u&quot;, ylab = &quot;Coverage&quot;, ylim = c(0,1))
+plot(u_vec, coverage, type = &quot;o&quot;, col = &quot;blue&quot;, lwd = 2, xlab = &quot;u&quot;, ylab = &quot;Coverage&quot;, ylim = c(0,1))
 abline(h = 0.8, col = &quot;red&quot;, lty = &quot;dashed&quot;)</code></pre>
 <p><img src="figure/sensitivity.rmd/unnamed-chunk-7-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
@@ -857,106 +889,6 @@ Date
 <tr>
 <td>
 <a href="https://github.com/AgueroZZ/online_tut/blob/0218bdfe2ce85ce2728d073516d798137c05543b/docs/figure/sensitivity.rmd/unnamed-chunk-7-1.png" target="_blank">0218bdf</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2024-11-21
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-</div>
-<div id="varying-the-exceedance-probability" class="section level2">
-<h2>Varying the exceedance probability</h2>
-<p>Next, we replicate the same analysis for other exceedance
-probabilities:</p>
-<pre class="r"><code>alpha_vec = c(0.01, 0.05, 0.1, 0.5)
-u_vec = seq(0.1, 1, by = 0.1)
-pred_summary_list &lt;- lapply(alpha_vec, function(alpha) lapply(u_vec, fit_once, alpha = alpha))</code></pre>
-<p>Put everything on the same plot for visualization:</p>
-<pre class="r"><code>pred_means_list &lt;- lapply(pred_summary_list, function(pred_summary) do.call(rbind, lapply(pred_summary, function(x) x$mean)))
-
-MSE_mat &lt;- lapply(pred_means_list, function(pred_means) apply(pred_means, 1, function(x) mean((x - data$logy)^2)))
-
-# change list to matrix
-MSE_mat &lt;- do.call(cbind, MSE_mat)
-matplot(u_vec, MSE_mat, type = &quot;l&quot;, col = rainbow(length(alpha_vec)), lwd = 2, xlab = &quot;u&quot;, ylab = &quot;MSE&quot;)
-legend(&quot;topright&quot;, legend = paste(&quot;alpha =&quot;, alpha_vec), col = rainbow(length(alpha_vec)), lty = 1, cex = 1)</code></pre>
-<p><img src="figure/sensitivity.rmd/unnamed-chunk-9-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-9-1">
-Past versions of unnamed-chunk-9-1.png
-</button>
-</p>
-<div id="fig-unnamed-chunk-9-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/AgueroZZ/online_tut/blob/0218bdfe2ce85ce2728d073516d798137c05543b/docs/figure/sensitivity.rmd/unnamed-chunk-9-1.png" target="_blank">0218bdf</a>
-</td>
-<td>
-Ziang Zhang
-</td>
-<td>
-2024-11-21
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<p>Now, let’s check how the coverage probability changes with different
-values of <span class="math inline">\(u\)</span> and <span
-class="math inline">\(\alpha\)</span>.</p>
-<pre class="r"><code>coverage_mat &lt;- lapply(pred_summary_list, function(pred_summary) lapply(pred_summary, function(x) mean(data$logy &gt; x$q0.1 &amp; data$logy &lt; x$q0.9)))
-coverage_mat &lt;- do.call(cbind, coverage_mat)
-matplot(u_vec, coverage_mat, type = &quot;l&quot;, col = rainbow(length(alpha_vec)), lwd = 2, xlab = &quot;u&quot;, ylab = &quot;Coverage&quot;, ylim = c(0,1))
-legend(&quot;bottomright&quot;, legend = paste(&quot;alpha =&quot;, alpha_vec), col = rainbow(length(alpha_vec)), lty = 1, cex = 1)</code></pre>
-<p><img src="figure/sensitivity.rmd/unnamed-chunk-10-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-10-1">
-Past versions of unnamed-chunk-10-1.png
-</button>
-</p>
-<div id="fig-unnamed-chunk-10-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/AgueroZZ/online_tut/blob/0218bdfe2ce85ce2728d073516d798137c05543b/docs/figure/sensitivity.rmd/unnamed-chunk-10-1.png" target="_blank">0218bdf</a>
 </td>
 <td>
 Ziang Zhang
