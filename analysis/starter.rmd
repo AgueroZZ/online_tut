@@ -65,8 +65,13 @@ g(x) &\sim \text{sGP}_{\alpha}(\sigma_x), \\
 
 We assume the sGP prior has a frequency of $2$ ($\alpha = 4\pi$), and use an Exponential prior for the one-step PSD $\sigma(1)$ defined as:
 \[
-\text{P}(\sigma(1) > 2) = 0.1.
+\text{P}(\sigma(1) > 2) = 0.1,
 \]
+which corresponds to a prior median of:
+```{r}
+INLA::inla.pc.qprec(0.5, u=2, alpha = 0.1)^{-0.5}
+```
+
 
 The standard deviation $\sigma_\xi$ of the observation-level random intercept that accounts for the overdispersion, follows an Exponential prior with a median of $1$.
 All the fixed effects (including the boundary effects of the sGP) are assigned independent normal priors with zero mean and variance $1000$.
@@ -134,7 +139,7 @@ head(post_g)
 ```
 
 
-We can also just obtain the raw samples of $g$ at these locations:
+We can also just obtain the posterior samples of $g$ at these locations:
 ```{r}
 post_g_raw <- predict(mod, newdata = data.frame(x = location_of_interest), variable = "x", only.samples = TRUE, include.intercept = FALSE)
 plot(location_of_interest, true_f(location_of_interest),
