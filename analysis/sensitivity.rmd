@@ -18,9 +18,9 @@ library(BayesGP)
 One important factor that affects the inference of the sGP model is the choice of the prior on its SD parameter $\sigma$.
 The suggested way to construct prior on $\sigma$ is through an Exponential prior on its $h$-step predictive SD $\sigma(h)$, with the form of
 $$
-\text{P}[\sigma(h)>u] = q,
+\text{P}[\sigma(h)>u] = 0.5,
 $$
-where $u$ is the threshold and $q$ is the exceedance probability.
+where $u$ is prior median.
 
 In this tutorial, we will examine the sensitivity of the sGP model to the choice of the prior on $\sigma$ by fitting the model to the Lynx dataset with different priors on $\sigma$.
 
@@ -44,7 +44,7 @@ First, we write a function that takes in the threshold $u$ and the exceedance pr
 fit_once <- function(u, alpha){
   pred_SD <- list(u = u, alpha = alpha)
   results_sGP <- BayesGP::model_fit(
-    formula = y ~ f(x = year, model = "sgp", k = 100,
+    formula = y ~ f(x = year, model = "sgp", k = 30,
                     period = 10,
                     sd.prior = list(param = pred_SD, h = 50), 
                     initial_location = "left", region = region_lynx) +
@@ -56,11 +56,11 @@ fit_once <- function(u, alpha){
 }
 ```
 
-First, we fixed the exceedance probability at $0.01$ and tried different values of $u$.
+Let's try different values of $u$:
 
 ```{r}
-alpha = 0.01
-u_vec = seq(0.1, 1, by = 0.1)
+alpha = 0.5
+u_vec = c(0.01, 0.03, 0.05, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.8, 1, 1.5, 2)
 pred_summary <- lapply(u_vec, fit_once, alpha = alpha)
 pred_means <- do.call(rbind, lapply(pred_summary, function(x) x$mean))
 ```
@@ -84,55 +84,16 @@ We could also plot the MSE of the posterior mean for different values of $u$.
 
 ```{r}
 MSEs <- apply(pred_means, 1, function(x) mean((x - data$logy)^2))
-plot(u_vec, MSEs, type = "l", col = "blue", lwd = 2, xlab = "u", ylab = "MSE")
+plot(u_vec, MSEs, type = "o", col = "blue", lwd = 2, xlab = "u", ylab = "MSE")
 ```
 
-Overall, unless the value of $u$ is too small, the MSE is not sensitive to the choice of $u$.
+Overall, unless the value of the prior median $u$ is too small, the MSE is not sensitive to $u$.
 
 
-We could similar check how the coverage of the 95% credible interval changes with different values of $u$.
+We could similar check how the coverage of the 80% credible interval changes with different values of $u$.
 
 ```{r}
 coverage <- lapply(pred_summary, function(x) mean(data$logy > x$q0.1 & data$logy < x$q0.9))
-plot(u_vec, coverage, type = "l", col = "blue", lwd = 2, xlab = "u", ylab = "Coverage", ylim = c(0,1))
+plot(u_vec, coverage, type = "o", col = "blue", lwd = 2, xlab = "u", ylab = "Coverage", ylim = c(0,1))
 abline(h = 0.8, col = "red", lty = "dashed")
 ```
-
-
-## Varying the exceedance probability
-
-
-Next, we replicate the same analysis for other exceedance probabilities:
-
-```{r}
-alpha_vec = c(0.01, 0.05, 0.1, 0.5)
-u_vec = seq(0.1, 1, by = 0.1)
-pred_summary_list <- lapply(alpha_vec, function(alpha) lapply(u_vec, fit_once, alpha = alpha))
-```
-
-
-Put everything on the same plot for visualization:
-
-```{r}
-pred_means_list <- lapply(pred_summary_list, function(pred_summary) do.call(rbind, lapply(pred_summary, function(x) x$mean)))
-
-MSE_mat <- lapply(pred_means_list, function(pred_means) apply(pred_means, 1, function(x) mean((x - data$logy)^2)))
-
-# change list to matrix
-MSE_mat <- do.call(cbind, MSE_mat)
-matplot(u_vec, MSE_mat, type = "l", col = rainbow(length(alpha_vec)), lwd = 2, xlab = "u", ylab = "MSE")
-legend("topright", legend = paste("alpha =", alpha_vec), col = rainbow(length(alpha_vec)), lty = 1, cex = 1)
-```
-
-Now, let's check how the coverage probability changes with different values of $u$ and $\alpha$.
-
-```{r}
-coverage_mat <- lapply(pred_summary_list, function(pred_summary) lapply(pred_summary, function(x) mean(data$logy > x$q0.1 & data$logy < x$q0.9)))
-coverage_mat <- do.call(cbind, coverage_mat)
-matplot(u_vec, coverage_mat, type = "l", col = rainbow(length(alpha_vec)), lwd = 2, xlab = "u", ylab = "Coverage", ylim = c(0,1))
-legend("bottomright", legend = paste("alpha =", alpha_vec), col = rainbow(length(alpha_vec)), lty = 1, cex = 1)
-```
-
-
-
-
