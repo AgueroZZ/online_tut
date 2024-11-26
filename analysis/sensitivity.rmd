@@ -38,10 +38,10 @@ region_lynx <- c(1821,1960)
 
 ## Varying the threshold
 
-First, we write a function that takes in the threshold $u$ and the exceedance probability $q$ and fits the sGP model with the corresponding prior on $\sigma(50)$, and then returns the posterior summary of the fitted model.
+First, we write a function that takes in the prior median `u` and fits the sGP model with the corresponding prior on $\sigma(50)$, and then returns the posterior summary of the fitted model.
 
 ```{r}
-fit_once <- function(u, alpha){
+fit_once <- function(u, alpha = 0.5){
   pred_SD <- list(u = u, alpha = alpha)
   results_sGP <- BayesGP::model_fit(
     formula = y ~ f(x = year, model = "sgp", k = 30,
