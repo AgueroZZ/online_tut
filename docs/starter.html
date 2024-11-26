@@ -519,15 +519,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZonlinetuttree69ac6db909f0a6836d5061d7904d608d82560a92targetblank69ac6dba">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZonlinetuttree62f1a67d52cd930c969163889148bccfe1f1b3f3targetblank62f1a67a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/AgueroZZ/online_tut/tree/69ac6db909f0a6836d5061d7904d608d82560a92" target="_blank">69ac6db</a>
+<a href="https://github.com/AgueroZZ/online_tut/tree/62f1a67d52cd930c969163889148bccfe1f1b3f3" target="_blank">62f1a67</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZonlinetuttree69ac6db909f0a6836d5061d7904d608d82560a92targetblank69ac6dba"
+id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZonlinetuttree62f1a67d52cd930c969163889148bccfe1f1b3f3targetblank62f1a67a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -537,7 +537,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/AgueroZZ/online_tut/tree/69ac6db909f0a6836d5061d7904d608d82560a92" target="_blank">69ac6db</a>.
+<a href="https://github.com/AgueroZZ/online_tut/tree/62f1a67d52cd930c969163889148bccfe1f1b3f3" target="_blank">62f1a67</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -606,6 +606,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/AgueroZZ/online_tut/blob/62f1a67d52cd930c969163889148bccfe1f1b3f3/analysis/starter.rmd" target="_blank">62f1a67</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2024-11-26
+</td>
+<td>
+workflowr::wflow_publish("analysis/starter.rmd")
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/AgueroZZ/online_tut/6be64e95092aeaf4c1199a2ccfedfdb8d55f809c/docs/starter.html" target="_blank">6be64e9</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2024-11-26
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -892,7 +926,21 @@ prior.</p>
 <div id="inference-using-bayesgp" class="section level2">
 <h2>Inference using <code>BayesGP</code></h2>
 <p>To make approximate Bayesian inference of the above model, we make
-use of the <code>BayesGP</code> package:</p>
+use of the <code>BayesGP</code> package. The main function to fit the
+model is <code>model_fit</code>, which takes a formula, a dataset, and a
+family as input. We specify the sGP prior by using the <code>f</code>
+function in the formula, and set the <code>model</code> argument to
+<code>"sgp"</code>. The <code>region</code> argument specifies the
+region where the FEM approximation is defined, which by default is the
+same as the range of the covariate. The prior for the standard deviation
+parameter of the GP or the random effect is specified by the
+<code>sd.prior</code> argument. When <code>sd.prior</code> is a list,
+specifying the <code>h</code> argument will automatically convert the SD
+to the <span class="math inline">\(h\)</span>-step PSD. When
+<code>sd.prior</code> is specified as a scalar, it is assumed to be
+prior median.</p>
+<p>Below is an example of fitting the model to the synthetic
+dataset:</p>
 <pre class="r"><code>mod &lt;- BayesGP::model_fit(
     y ~ f(
       x,
@@ -906,6 +954,9 @@ use of the <code>BayesGP</code> package:</p>
     data = data,
     family = &quot;Poisson&quot;
   )</code></pre>
+<p>Note that specifying <code>freq = 2</code> is equivalent to setting
+<code>a = 4*pi</code> which is also equivalent to setting
+<code>period = 1/2</code> in the sGP prior.</p>
 <p>We can take a quick look at the posterior summary:</p>
 <pre class="r"><code>summary(mod)</code></pre>
 <pre><code>Here are some posterior/prior summaries for the parameters: 
@@ -962,6 +1013,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/AgueroZZ/online_tut/blob/6be64e95092aeaf4c1199a2ccfedfdb8d55f809c/docs/figure/starter.rmd/unnamed-chunk-7-1.png" target="_blank">6be64e9</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2024-11-26
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/AgueroZZ/online_tut/blob/287b7985552f2e634df37a2d14f111133e449b17/docs/figure/starter.rmd/unnamed-chunk-7-1.png" target="_blank">287b798</a>
 </td>
 <td>
@@ -1009,6 +1071,43 @@ plot(location_of_interest, true_f(location_of_interest),
      ylab = &quot;y&quot;, xlab = &quot;x&quot;)
 matlines(location_of_interest, post_g_raw[,2:12], col = &quot;pink&quot;, lty = 2, lwd = 0.5)</code></pre>
 <p><img src="figure/starter.rmd/unnamed-chunk-9-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-9-1">
+Past versions of unnamed-chunk-9-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-9-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/AgueroZZ/online_tut/blob/6be64e95092aeaf4c1199a2ccfedfdb8d55f809c/docs/figure/starter.rmd/unnamed-chunk-9-1.png" target="_blank">6be64e9</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2024-11-26
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
