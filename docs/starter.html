@@ -388,7 +388,7 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2024-11-24
+<strong>Last updated:</strong> 2024-11-26
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -519,15 +519,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZonlinetuttree1709c74f174ad1e910e2f359c0349b5138f86dfctargetblank1709c74a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZonlinetuttree69ac6db909f0a6836d5061d7904d608d82560a92targetblank69ac6dba">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/AgueroZZ/online_tut/tree/1709c74f174ad1e910e2f359c0349b5138f86dfc" target="_blank">1709c74</a>
+<a href="https://github.com/AgueroZZ/online_tut/tree/69ac6db909f0a6836d5061d7904d608d82560a92" target="_blank">69ac6db</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZonlinetuttree1709c74f174ad1e910e2f359c0349b5138f86dfctargetblank1709c74a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZonlinetuttree69ac6db909f0a6836d5061d7904d608d82560a92targetblank69ac6dba"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -537,7 +537,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/AgueroZZ/online_tut/tree/1709c74f174ad1e910e2f359c0349b5138f86dfc" target="_blank">1709c74</a>.
+<a href="https://github.com/AgueroZZ/online_tut/tree/69ac6db909f0a6836d5061d7904d608d82560a92" target="_blank">69ac6db</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -562,12 +562,6 @@ Ignored files:
 Untracked files:
     Untracked:  code/tut.o
     Untracked:  code/tut.so
-
-Unstaged changes:
-    Modified:   analysis/index.Rmd
-    Modified:   analysis/lynx.rmd
-    Modified:   analysis/more_comparison.rmd
-    Modified:   analysis/sensitivity.rmd
 
 </code></pre>
 <p>
@@ -612,6 +606,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/AgueroZZ/online_tut/blob/69ac6db909f0a6836d5061d7904d608d82560a92/analysis/starter.rmd" target="_blank">69ac6db</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2024-11-26
+</td>
+<td>
+workflowr::wflow_publish("analysis/starter.rmd")
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/AgueroZZ/online_tut/287b7985552f2e634df37a2d14f111133e449b17/docs/starter.html" target="_blank">287b798</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2024-11-24
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -845,8 +873,10 @@ class="math inline">\(2\)</span> (<span class="math inline">\(\alpha =
 4\pi\)</span>), and use an Exponential prior for the one-step PSD <span
 class="math inline">\(\sigma(1)\)</span> defined as: <span
 class="math display">\[
-\text{P}(\sigma(1) &gt; 2) = 0.1.
-\]</span></p>
+\text{P}(\sigma(1) &gt; 2) = 0.1,
+\]</span> which corresponds to a prior median of:</p>
+<pre class="r"><code>INLA::inla.pc.qprec(0.5, u=2, alpha = 0.1)^{-0.5}</code></pre>
+<pre><code>[1] 0.60206</code></pre>
 <p>The standard deviation <span
 class="math inline">\(\sigma_\xi\)</span> of the observation-level
 random intercept that accounts for the overdispersion, follows an
@@ -907,13 +937,13 @@ polygon(c(location_of_interest, rev(location_of_interest)),
         col = adjustcolor(&quot;blue&quot;, alpha.f = 0.2), border = NA)
 legend(&quot;topright&quot;, legend = c(&quot;True function&quot;, &quot;Posterior mean&quot;),
        col = c(&quot;black&quot;, &quot;blue&quot;), lty = c(1, 2), lwd = c(1, 1))</code></pre>
-<p><img src="figure/starter.rmd/unnamed-chunk-6-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/starter.rmd/unnamed-chunk-7-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-6-1">
-Past versions of unnamed-chunk-6-1.png
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-7-1">
+Past versions of unnamed-chunk-7-1.png
 </button>
 </p>
-<div id="fig-unnamed-chunk-6-1" class="collapse">
+<div id="fig-unnamed-chunk-7-1" class="collapse">
 <div class="table-responsive">
 <table class="table table-condensed table-hover">
 <thead>
@@ -932,7 +962,18 @@ Date
 <tbody>
 <tr>
 <td>
-<a href="https://github.com/AgueroZZ/online_tut/blob/c4bd82970d0b1f8e56d7a066eab61a4ec44443bd/docs/figure/starter.rmd/unnamed-chunk-6-1.png" target="_blank">c4bd829</a>
+<a href="https://github.com/AgueroZZ/online_tut/blob/287b7985552f2e634df37a2d14f111133e449b17/docs/figure/starter.rmd/unnamed-chunk-7-1.png" target="_blank">287b798</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2024-11-24
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/AgueroZZ/online_tut/blob/c4bd82970d0b1f8e56d7a066eab61a4ec44443bd/docs/figure/starter.rmd/unnamed-chunk-7-1.png" target="_blank">c4bd829</a>
 </td>
 <td>
 Ziang Zhang
@@ -959,7 +1000,7 @@ head(post_g)</code></pre>
 4 0.06012024  3.5991912 4.2339789 3.914358
 5 0.08016032  4.4427572 5.0866405 4.762672
 6 0.10020040  4.9670371 5.6440898 5.307025</code></pre>
-<p>We can also just obtain the raw samples of <span
+<p>We can also just obtain the posterior samples of <span
 class="math inline">\(g\)</span> at these locations:</p>
 <pre class="r"><code>post_g_raw &lt;- predict(mod, newdata = data.frame(x = location_of_interest), variable = &quot;x&quot;, only.samples = TRUE, include.intercept = FALSE)
 plot(location_of_interest, true_f(location_of_interest),
@@ -967,7 +1008,7 @@ plot(location_of_interest, true_f(location_of_interest),
      pch = 20, cex = 0.5,
      ylab = &quot;y&quot;, xlab = &quot;x&quot;)
 matlines(location_of_interest, post_g_raw[,2:12], col = &quot;pink&quot;, lty = 2, lwd = 0.5)</code></pre>
-<p><img src="figure/starter.rmd/unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/starter.rmd/unnamed-chunk-9-1.png" width="672" style="display: block; margin: auto;" /></p>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -1001,32 +1042,35 @@ other attached packages:
  [9] ggplot2_3.5.1   tidyverse_2.0.0 BayesGP_0.1.3   workflowr_1.7.1
 
 loaded via a namespace (and not attached):
- [1] gtable_0.3.6        TMB_1.9.15          xfun_0.48          
- [4] bslib_0.8.0         ks_1.14.3           processx_3.8.4     
- [7] lattice_0.22-6      numDeriv_2016.8-1.1 callr_3.7.6        
-[10] tzdb_0.4.0          bitops_1.0-9        vctrs_0.6.5        
-[13] tools_4.3.1         ps_1.8.0            generics_0.1.3     
-[16] aghq_0.4.1          fansi_1.0.6         cluster_2.1.6      
-[19] highr_0.11          pkgconfig_2.0.3     fds_1.8            
-[22] KernSmooth_2.23-24  Matrix_1.6-4        data.table_1.16.2  
-[25] lifecycle_1.0.4     compiler_4.3.1      git2r_0.33.0       
-[28] statmod_1.5.0       munsell_0.5.1       getPass_0.2-4      
-[31] mvQuad_1.0-8        httpuv_1.6.15       htmltools_0.5.8.1  
-[34] rainbow_3.8         sass_0.4.9          RCurl_1.98-1.16    
-[37] yaml_2.3.10         pracma_2.4.4        later_1.3.2        
-[40] pillar_1.9.0        jquerylib_0.1.4     whisker_0.4.1      
-[43] MASS_7.3-60         cachem_1.1.0        mclust_6.1.1       
-[46] tidyselect_1.2.1    digest_0.6.37       mvtnorm_1.3-1      
-[49] stringi_1.8.4       splines_4.3.1       pcaPP_2.0-5        
-[52] rprojroot_2.0.4     fastmap_1.2.0       grid_4.3.1         
-[55] colorspace_2.1-1    cli_3.6.3           magrittr_2.0.3     
-[58] utf8_1.2.4          withr_3.0.2         scales_1.3.0       
-[61] promises_1.3.0      timechange_0.3.0    rmarkdown_2.28     
-[64] httr_1.4.7          deSolve_1.40        hms_1.1.3          
-[67] evaluate_1.0.1      knitr_1.48          rlang_1.1.4        
-[70] Rcpp_1.0.13-1       hdrcde_3.4          glue_1.8.0         
-[73] fda_6.2.0           rstudioapi_0.16.0   jsonlite_1.8.9     
-[76] R6_2.5.1            fs_1.6.4           </code></pre>
+ [1] tidyselect_1.2.1    hdrcde_3.4          bitops_1.0-9       
+ [4] fastmap_1.2.0       RCurl_1.98-1.16     INLA_23.09.09      
+ [7] pracma_2.4.4        promises_1.3.0      digest_0.6.37      
+[10] timechange_0.3.0    lifecycle_1.0.4     sf_1.0-17          
+[13] cluster_2.1.6       statmod_1.5.0       processx_3.8.4     
+[16] magrittr_2.0.3      compiler_4.3.1      rlang_1.1.4        
+[19] sass_0.4.9          tools_4.3.1         utf8_1.2.4         
+[22] yaml_2.3.10         data.table_1.16.2   knitr_1.48         
+[25] sp_2.1-4            mclust_6.1.1        classInt_0.4-10    
+[28] rainbow_3.8         KernSmooth_2.23-24  fda_6.2.0          
+[31] numDeriv_2016.8-1.1 withr_3.0.2         grid_4.3.1         
+[34] pcaPP_2.0-5         fansi_1.0.6         git2r_0.33.0       
+[37] e1071_1.7-16        colorspace_2.1-1    scales_1.3.0       
+[40] MASS_7.3-60         cli_3.6.3           mvtnorm_1.3-1      
+[43] rmarkdown_2.28      generics_0.1.3      mvQuad_1.0-8       
+[46] rstudioapi_0.16.0   httr_1.4.7          tzdb_0.4.0         
+[49] fds_1.8             DBI_1.2.3           cachem_1.1.0       
+[52] proxy_0.4-27        splines_4.3.1       aghq_0.4.1         
+[55] vctrs_0.6.5         Matrix_1.6-4        jsonlite_1.8.9     
+[58] callr_3.7.6         hms_1.1.3           jquerylib_0.1.4    
+[61] units_0.8-5         glue_1.8.0          ps_1.8.0           
+[64] stringi_1.8.4       gtable_0.3.6        later_1.3.2        
+[67] munsell_0.5.1       pillar_1.9.0        htmltools_0.5.8.1  
+[70] deSolve_1.40        TMB_1.9.15          R6_2.5.1           
+[73] fmesher_0.1.7       ks_1.14.3           rprojroot_2.0.4    
+[76] evaluate_1.0.1      lattice_0.22-6      highr_0.11         
+[79] httpuv_1.6.15       bslib_0.8.0         class_7.3-22       
+[82] Rcpp_1.0.13-1       whisker_0.4.1       xfun_0.48          
+[85] fs_1.6.4            getPass_0.2-4       pkgconfig_2.0.3    </code></pre>
 </div>
 </div>
 </div>
