@@ -13,6 +13,8 @@ navbar:
     href: https://github.com/AgueroZZ/online_tut
 output:
   workflowr::wflow_html:
+    includes:
+      in_header: "_includes/google_analytics.html"
     toc: yes
     toc_float: yes
     theme: cosmo
