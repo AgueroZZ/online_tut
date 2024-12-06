@@ -39,6 +39,15 @@
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
 <link href="site_libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet" />
 <link href="site_libs/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet" />
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-LT0XVHX5ER"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-LT0XVHX5ER');
+</script>
 
 <link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/main/img/reproducible.png">
 <!-- Add a small amount of space between sections. -->
@@ -367,7 +376,7 @@ dataset</h1>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
 <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
-workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger"
+workflowr <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span>
 </button>
 </p>
@@ -378,8 +387,8 @@ aria-hidden="true"></span>
 </li>
 <li>
 <a data-toggle="tab" href="#checks"> Checks <span
-class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> </a>
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+</a>
 </li>
 <li>
 <a data-toggle="tab" href="#versions">Past versions</a>
@@ -388,13 +397,13 @@ aria-hidden="true"></span> </a>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2024-11-26
+<strong>Last updated:</strong> 2024-12-06
 </p>
 <p>
 <strong>Checks:</strong> <span
-class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7
 <span class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> 1
+aria-hidden="true"></span> 0
 </p>
 <p>
 <strong>Knit directory:</strong> <code>online_tut/</code> <span
@@ -417,21 +426,18 @@ versions</em> tab lists the development history.
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges">
-<span class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted
-changes </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date
+</a>
 </p>
 </div>
-<div id="strongRMarkdownfilestronguncommittedchanges"
+<div id="strongRMarkdownfilestronguptodate"
 class="panel-collapse collapse">
 <div class="panel-body">
-<p>The R Markdown file has unstaged changes. To know which version of
-the R Markdown file created these results, you’ll want to first commit
-it to the Git repo. If you’re still working on the analysis, you can
-ignore this warning. When you’re finished, you can run
-<code>wflow_publish</code> to commit the R Markdown file and build the
-HTML.</p>
+<p>Great! Since the R Markdown file has been committed to the Git
+repository, you know the exact version of the code that produced these
+results.</p>
 </div>
 </div>
 </div>
@@ -522,15 +528,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZonlinetuttree945ac044e1d4f9576c0ac781def51aaadcc9d8dftargetblank945ac04a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZonlinetuttree59de338da790f887082aff4daee6ee6f460a1ac0targetblank59de338a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/AgueroZZ/online_tut/tree/945ac044e1d4f9576c0ac781def51aaadcc9d8df" target="_blank">945ac04</a>
+<a href="https://github.com/AgueroZZ/online_tut/tree/59de338da790f887082aff4daee6ee6f460a1ac0" target="_blank">59de338</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZonlinetuttree945ac044e1d4f9576c0ac781def51aaadcc9d8dftargetblank945ac04a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomAgueroZZonlinetuttree59de338da790f887082aff4daee6ee6f460a1ac0targetblank59de338a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -540,7 +546,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/AgueroZZ/online_tut/tree/945ac044e1d4f9576c0ac781def51aaadcc9d8df" target="_blank">945ac04</a>.
+<a href="https://github.com/AgueroZZ/online_tut/tree/59de338da790f887082aff4daee6ee6f460a1ac0" target="_blank">59de338</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -563,11 +569,10 @@ Ignored files:
     Ignored:    code/.DS_Store
 
 Untracked files:
-    Untracked:  code/tut.o
-    Untracked:  code/tut.so
+    Untracked:  analysis/_includes/
 
 Unstaged changes:
-    Modified:   analysis/more_comparison.rmd
+    Modified:   analysis/_site.yml
 
 </code></pre>
 <p>
@@ -612,6 +617,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/AgueroZZ/online_tut/blob/4348fa13cb434da88dc0fef609ad6fc22d3448ff/analysis/more_comparison.rmd" target="_blank">4348fa1</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2024-12-06
+</td>
+<td>
+commit
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/AgueroZZ/online_tut/4348fa13cb434da88dc0fef609ad6fc22d3448ff/docs/more_comparison.html" target="_blank">4348fa1</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2024-12-06
+</td>
+<td>
+commit
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -764,6 +803,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/AgueroZZ/online_tut/blob/4348fa13cb434da88dc0fef609ad6fc22d3448ff/docs/figure/more_comparison.rmd/unnamed-chunk-4-1.png" target="_blank">4348fa1</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2024-12-06
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/AgueroZZ/online_tut/blob/7335a0f9d34c820dde055a2f8c753fb873a6326c/docs/figure/more_comparison.rmd/unnamed-chunk-4-1.png" target="_blank">7335a0f</a>
 </td>
 <td>
@@ -778,6 +828,43 @@ Ziang Zhang
 </div>
 </div>
 <p><img src="figure/more_comparison.rmd/unnamed-chunk-4-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-4-2">
+Past versions of unnamed-chunk-4-2.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-4-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/AgueroZZ/online_tut/blob/4348fa13cb434da88dc0fef609ad6fc22d3448ff/docs/figure/more_comparison.rmd/unnamed-chunk-4-2.png" target="_blank">4348fa1</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2024-12-06
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>Take a look at the inferential accuracy for the testing data, using
 the posterior median:</p>
 <pre class="r"><code># MSE
@@ -1039,6 +1126,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/AgueroZZ/online_tut/blob/4348fa13cb434da88dc0fef609ad6fc22d3448ff/docs/figure/more_comparison.rmd/unnamed-chunk-10-1.png" target="_blank">4348fa1</a>
+</td>
+<td>
+Ziang Zhang
+</td>
+<td>
+2024-12-06
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/AgueroZZ/online_tut/blob/ecb3b23c6431bd58b1549429aa1e05f93399c411/docs/figure/more_comparison.rmd/unnamed-chunk-10-1.png" target="_blank">ecb3b23</a>
 </td>
 <td>
@@ -1073,8 +1171,8 @@ MAE = mean(abs(test_data$logy - predicted_means[-c(1:80)]))
 
 ## Show them in a table:
 data.frame(MSE = MSE, RMSE = rMSE, MAE = MAE)</code></pre>
-<pre><code>       MSE     RMSE     MAE
-1 1.383549 1.176244 0.98108</code></pre>
+<pre><code>       MSE     RMSE       MAE
+1 1.381458 1.175354 0.9802481</code></pre>
 </div>
 <div id="fitting-a-bayesian-arima" class="section level3">
 <h3>Fitting a Bayesian ARIMA</h3>
@@ -1182,7 +1280,7 @@ other attached packages:
  [7] lubridate_1.9.3     forcats_1.0.0       stringr_1.5.1      
 [10] dplyr_1.1.4         purrr_1.0.2         readr_2.1.5        
 [13] tidyr_1.3.1         tibble_3.2.1        ggplot2_3.5.1      
-[16] tidyverse_2.0.0    
+[16] tidyverse_2.0.0     workflowr_1.7.1    
 
 loaded via a namespace (and not attached):
   [1] RColorBrewer_1.1-3   rstudioapi_0.16.0    jsonlite_1.8.9      
@@ -1195,34 +1293,35 @@ loaded via a namespace (and not attached):
  [22] cachem_1.1.0         TMB_1.9.15           whisker_0.4.1       
  [25] lifecycle_1.0.4      pkgconfig_2.0.3      R6_2.5.1            
  [28] fastmap_1.2.0        digest_0.6.37        numDeriv_2016.8-1.1 
- [31] colorspace_2.1-1     rprojroot_2.0.4      fansi_1.0.6         
- [34] timechange_0.3.0     compiler_4.3.1       proxy_0.4-27        
- [37] withr_3.0.2          tseries_0.10-58      inline_0.3.19       
- [40] DBI_1.2.3            QuickJSR_1.3.1       pkgbuild_1.4.4      
- [43] highr_0.11           MASS_7.3-60          classInt_0.4-10     
- [46] loo_2.8.0            prophet_1.0          tools_4.3.1         
- [49] units_0.8-5          lmtest_0.9-40        quantmod_0.4.26     
- [52] httpuv_1.6.15        nnet_7.3-19          glue_1.8.0          
- [55] quadprog_1.5-8       nlme_3.1-166         promises_1.3.0      
- [58] grid_4.3.1           sf_1.0-17            cluster_2.1.6       
- [61] generics_0.1.3       gtable_0.3.6         fda_6.2.0           
- [64] tzdb_0.4.0           class_7.3-22         data.table_1.16.2   
- [67] hms_1.1.3            utf8_1.2.4           pillar_1.9.0        
- [70] later_1.3.2          splines_4.3.1        lattice_0.22-6      
- [73] ks_1.14.3            tidyselect_1.2.1     fds_1.8             
- [76] knitr_1.48           git2r_0.33.0         gridExtra_2.3       
- [79] urca_1.3-4           stats4_4.3.1         xfun_0.48           
- [82] bridgesampling_1.1-2 statmod_1.5.0        timeDate_4041.110   
- [85] matrixStats_1.4.1    rstan_2.32.6         mvQuad_1.0-8        
- [88] stringi_1.8.4        workflowr_1.7.1      yaml_2.3.10         
- [91] evaluate_1.0.1       codetools_0.2-20     cli_3.6.3           
- [94] RcppParallel_5.1.9   munsell_0.5.1        jquerylib_0.1.4     
- [97] Rcpp_1.0.13-1        coda_0.19-4.1        parallel_4.3.1      
-[100] rstantools_2.4.0     MatrixModels_0.5-3   fmesher_0.1.7       
-[103] fracdiff_1.5-3       mclust_6.1.1         bayesplot_1.11.1    
-[106] Brobdingnag_1.2-9    bitops_1.0-9         mvtnorm_1.3-1       
-[109] scales_1.3.0         xts_0.14.0           e1071_1.7-16        
-[112] pcaPP_2.0-5          rlang_1.1.4         </code></pre>
+ [31] colorspace_2.1-1     ps_1.8.0             rprojroot_2.0.4     
+ [34] fansi_1.0.6          timechange_0.3.0     httr_1.4.7          
+ [37] compiler_4.3.1       proxy_0.4-27         withr_3.0.2         
+ [40] tseries_0.10-58      inline_0.3.19        DBI_1.2.3           
+ [43] QuickJSR_1.3.1       pkgbuild_1.4.4       highr_0.11          
+ [46] MASS_7.3-60          classInt_0.4-10      loo_2.8.0           
+ [49] prophet_1.0          tools_4.3.1          units_0.8-5         
+ [52] lmtest_0.9-40        quantmod_0.4.26      httpuv_1.6.15       
+ [55] nnet_7.3-19          glue_1.8.0           quadprog_1.5-8      
+ [58] callr_3.7.6          nlme_3.1-166         promises_1.3.0      
+ [61] grid_4.3.1           sf_1.0-17            getPass_0.2-4       
+ [64] cluster_2.1.6        generics_0.1.3       gtable_0.3.6        
+ [67] fda_6.2.0            tzdb_0.4.0           class_7.3-22        
+ [70] data.table_1.16.2    hms_1.1.3            utf8_1.2.4          
+ [73] pillar_1.9.0         later_1.3.2          splines_4.3.1       
+ [76] lattice_0.22-6       ks_1.14.3            tidyselect_1.2.1    
+ [79] fds_1.8              knitr_1.48           git2r_0.33.0        
+ [82] gridExtra_2.3        urca_1.3-4           stats4_4.3.1        
+ [85] xfun_0.48            bridgesampling_1.1-2 statmod_1.5.0       
+ [88] matrixStats_1.4.1    timeDate_4041.110    rstan_2.32.6        
+ [91] mvQuad_1.0-8         stringi_1.8.4        yaml_2.3.10         
+ [94] codetools_0.2-20     evaluate_1.0.1       cli_3.6.3           
+ [97] RcppParallel_5.1.9   munsell_0.5.1        processx_3.8.4      
+[100] jquerylib_0.1.4      Rcpp_1.0.13-1        coda_0.19-4.1       
+[103] parallel_4.3.1       rstantools_2.4.0     MatrixModels_0.5-3  
+[106] fmesher_0.1.7        fracdiff_1.5-3       mclust_6.1.1        
+[109] bayesplot_1.11.1     Brobdingnag_1.2-9    bitops_1.0-9        
+[112] mvtnorm_1.3-1        scales_1.3.0         xts_0.14.0          
+[115] e1071_1.7-16         pcaPP_2.0-5          rlang_1.1.4         </code></pre>
 </div>
 </div>
 </div>
